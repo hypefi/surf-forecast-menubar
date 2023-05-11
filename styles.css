@@ -1,0 +1,46 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e0f7fa;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.title {
+    color: #01579b;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.current-weather {
+    background-color: #4fc3f7;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.plot-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.plot {
+    background-color: #81d4fa;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    height: 300px;
+    position: relative;
+}
+
+.plot h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
