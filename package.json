@@ -4,6 +4,7 @@
   "description": "MenuBar app to see surf forecast, and get Alerts on specific surf swells",
   "main": "main.js",
   "scripts": {
+    "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -17,5 +18,8 @@
     "surf"
   ],
   "author": "Anas Boukharta",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+      "electron": "^24.3.0"
+    }
 }
