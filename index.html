@@ -8,12 +8,18 @@
     <div class="container">
         <header>
             <h1 class="title">Surf Report</h1>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider round"></div>
+                </label>
+            </div>
         </header>
        <section class="location-input">
             <h2>Enter Your Location</h2>
             <form>
                 <input type="text" id="location" name="location" placeholder="Enter your location">
-                <button type="button" id="auto-locate">🛰 Auto Locate</button>
+                <button type="button" id="auto-locate">🗺 Auto Locate</button>
             </form>
         </section>
         <section class="current-weather">
@@ -44,4 +50,14 @@
         </section>
     </div>
 </body>
+    <script>
+        document.getElementById('checkbox').addEventListener('change', function(event) {
+    if (event.target.checked) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+});
+
+    </script>
 </html>
