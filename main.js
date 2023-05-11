@@ -2,17 +2,17 @@ const { Menu, Tray, app, BrowserWindow } = require('electron')
 let tray = null
 let win = null 
 
-function createWindow () {
-  let win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: true,
-    }
-  })
+// function createWindow () {
+//   let win = new BrowserWindow({
+//     width: 800,
+//     height: 600,
+//     webPreferences: {
+//       nodeIntegration: true,
+//     }
+//   })
 
-  win.loadFile('index.html')
-}
+//   win.loadFile('index.html')
+// }
 
 // app.whenReady().then(createWindow)
 app.whenReady().then(() => {
@@ -25,7 +25,7 @@ tray = new Tray('./assets/icons/icons8-wave-22.png') // Provide the path to your
   tray.setContextMenu(contextMenu)
 
   win = new BrowserWindow({
-    width: 600,
+    width: 900,
     height: 450,
     show: false,
 frame: false, // change to true to be able to drag 

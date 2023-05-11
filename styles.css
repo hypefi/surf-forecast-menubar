@@ -66,3 +66,45 @@ body {
 .plot h2:hover {
     /* color: #0277bd; */
 }
+
+
+.location-input {
+    background-color: #81d4fa;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.location-input h2 {
+    margin-right: 20px;
+}
+
+.location-input form {
+    flex-grow: 1;
+    display: flex;
+    gap: 10px;
+}
+
+.location-input input {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+.location-input button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4fc3f7;
+    color: #fff;
+    cursor: pointer;
+}
+
+.location-input button:hover {
+    background-color: #29b6f6;
+}
