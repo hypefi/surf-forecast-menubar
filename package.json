@@ -1,0 +1,21 @@
+{
+  "name": "surf-forecast",
+  "version": "1.0.0",
+  "description": "MenuBar app to see surf forecast, and get Alerts on specific surf swells",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "surf",
+    "forecast",
+    "electron",
+    "macos",
+    "linux",
+    "windows",
+    "alert",
+    "surf"
+  ],
+  "author": "Anas Boukharta",
+  "license": "MIT"
+}
