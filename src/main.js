@@ -36,7 +36,7 @@ frame: false, // change to true to be able to drag
       backgroundThrottling: false
     }
   })
-  win.loadFile('index.html') // Load your application here
+win.loadFile('../app/view/index.html') // Load your application here
 
   win.on('blur', () => {
     if (!win.webContents.isDevToolsOpened()) {

@@ -2,7 +2,7 @@ from pysurfline import SpotForecast
 import json
 
 params={
-    "spotId":"5842041f4e65fad6a7708890",
+    "spotId":"5842041f4e65fad6a7708cfb",
     "days":2,
     "intervalHours":1,
     }

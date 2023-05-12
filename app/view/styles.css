@@ -168,3 +168,13 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+.chart-container {
+    width: 80%;
+    margin: 2em auto;
+}
+
+canvas {
+    width: 100% !important;
+    height: auto !important;
+}

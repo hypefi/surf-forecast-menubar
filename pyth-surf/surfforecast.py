@@ -1,9 +1,9 @@
 from pysurfline import SpotForecast
 from pysurfline import SurfReport
 
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+# import matplotlib
+# matplotlib.use('Agg')
+# import matplotlib.pyplot as plt
 
 params={
     "spotId":"5842041f4e65fad6a7708890",

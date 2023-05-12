@@ -4,6 +4,8 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
     <title>Surf Report</title>
 </head>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <body>
     <div class="container">
         <header>
@@ -32,7 +34,9 @@
             <div class="plot">
                 <h2>Swell Prediction</h2>
                 <div id="swell-plot">
-                    <!-- Swell plot goes here -->
+                    <div class="chart-container">
+                        <canvas id="myChart"></canvas>
+                    </div>
                 </div>
             </div>
             <div class="plot">
@@ -50,6 +54,7 @@
         </section>
     </div>
 </body>
+    <script>require('./index.js')</script> 
     <script>
         document.getElementById('checkbox').addEventListener('change', function(event) {
     if (event.target.checked) {
