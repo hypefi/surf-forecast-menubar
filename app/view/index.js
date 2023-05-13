@@ -4,7 +4,9 @@ const remote = require("electron").remote;
 // const remote = require('@electron/remote')
 // const config = require("../../src/config");
 // var path = require("path");
-const Chart = require('chart.js');
+// const Chart = require('chart.js');
+const { Chart } = require('chart.js');
+
 const moment = require('chartjs-adapter-moment');
 
 
@@ -42,6 +44,9 @@ let surf_min = data.map(obj => obj.surf_min);
 let surf_max = data.map(obj => obj.surf_max);
 
 // Creating the chart
+
+// Creating the chart
+document.addEventListener('DOMContentLoaded', () => {
 let ctx = document.getElementById('myChart').getContext('2d');
 let myChart = new Chart(ctx, {
     type: 'line',
@@ -76,4 +81,4 @@ let myChart = new Chart(ctx, {
         }
     }
 });
-
+});

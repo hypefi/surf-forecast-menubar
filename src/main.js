@@ -51,15 +51,18 @@ tray = new Tray('./assets/icons/icons8-wave-22.png') // Provide the path to your
     width: 900,
     height: 450,
     show: false,
-frame: false, // change to true to be able to drag 
+    frame: false, // change to true to be able to drag 
     fullscreenable: false,
     resizable: true,
     transparent: false,
     webPreferences: {
-      backgroundThrottling: false
+      backgroundThrottling: false,
+      nodeIntegration: true,
+      contextIsolation: false,
     }
   })
-win.loadFile('../app/view/index.html') // Load your application here
+// win.loadFile('../app/view/index.html') // Load your application here
+win.loadURL('file:///Users/admin/Desktop/WORK/CODE/2023/surf-forecast/app/view/index.html') // Load your application here
 
 win.webContents.openDevTools();
 
