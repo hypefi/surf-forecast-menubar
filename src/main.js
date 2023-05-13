@@ -1,6 +1,29 @@
 const { Menu, Tray, app, BrowserWindow } = require('electron')
+const os = require("os");
+
+const electron = require("electron");
+// const AutoLaunch = require("auto-launch");
+
+// const low = require("lowdb");
+// const FileSync = require("lowdb/adapters/FileSync");
+// const ShortcutManager = require("./components/shortcutManager");
+// const config = require("./config");
+const childProcess = require("child_process");
+
+const { Notification, shell, dialog } = electron;
+
+// const { Parser } = require("json2csv");
+const ipc = electron.ipcMain;
+
+
 let tray = null
 let win = null 
+
+
+
+
+
+
 
 // function createWindow () {
 //   let win = new BrowserWindow({
@@ -37,6 +60,8 @@ frame: false, // change to true to be able to drag
     }
   })
 win.loadFile('../app/view/index.html') // Load your application here
+
+win.webContents.openDevTools();
 
   win.on('blur', () => {
     if (!win.webContents.isDevToolsOpened()) {
