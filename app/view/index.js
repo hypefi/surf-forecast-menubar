@@ -31,48 +31,21 @@ loadData(); // Call the function that loads the data
 function createChart() {
     // Prepar(ring your data for the chart
 //
- data = [                                             
-    {                                                    
-        "timestamp": 1683846000,                         
-        // "timestamp": 1,                               
-        "probability": 100,                              
-        "utcOffset": 1,                                  
-        "surf_min": 1.5,                                 
-        "surf_max": 2.1,                                 
-        "surf_optimalScore": 2,                          
-        "surf_plus": false,                              
-        "surf_humanRelation": "Head to 0.6m overhead",   
-        "surf_raw_min": 1.35825,                         
-        "surf_raw_max": 2.12227,                         
-    },                                                   
-    {                                                    
-        "timestamp": 1683849600,                         
-        // "timestamp": 2,                               
-        "probability": 100,                              
-        "utcOffset": 1,                                  
-        "surf_min": 1.5,                                 
-        "surf_max": 2.4,                                 
-        "surf_optimalScore": 2,                          
-        "surf_plus": false,                              
-        "surf_humanRelation": "Head to well overhead",   
-        "surf_raw_min": 1.36819,                         
-        "surf_raw_max": 2.1378,                          
-    }                                                    
-    // ... more data                                     
-];
+    console.log("chart")
 
     let timestamps = data.map(obj => new Date(obj.timestamp * 1000));
     let surf_min = data.map(obj => obj.surf_min);
     let surf_max = data.map(obj => obj.surf_max);
 
-    document.addEventListener('DOMContentLoaded', () => {
+    console.log(surf_min)
+    console.log(surf_max)
+    console.log(timestamps)
+
         const Chart = require('chart.js/auto').Chart;
 
         let ctx = document.getElementById('myChart').getContext('2d');
 
-
-
-
+        
 
         let myChart = new Chart(ctx, {
             type: 'line',
@@ -94,5 +67,5 @@ function createChart() {
                 }]
             }
         });
-    });
-}
+    };
+
