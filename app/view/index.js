@@ -28,9 +28,74 @@ async function loadData() {
 
 loadData(); // Call the function that loads the data
 
+//Night time
+// Define a helper function to determine whether a timestamp falls within "night" hours
+
+function isNightTime(timestamp) {
+  // console.log(timestamp)
+  const date = new Date(timestamp);
+
+  // const hour = date.getUTCHours();
+  const hour = date.getHours();
+  // console.log(hour, "night?", hour >= 20 || hour < 6)
+  
+
+  // Define night hours as between 20:00 and 6:00 (You can adjust these as necessary)
+  return hour >= 20 || hour < 6;
+}
+
+// Define a helper function to determine whether a timestamp is at midnight
+function isMidnight(timestamp) {
+  const date = new Date(timestamp);
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+
+  // Check if the time is 00:00
+  return hours === 0 && minutes === 0;
+}
+
+
+// Define the Chart.js plugin
+const backgroundColorPlugin = {
+  id: 'backgroundColorPlugin',
+  beforeDraw: (chart) => {
+    const ctx = chart.ctx;
+    const xAxis = chart.scales['x'];
+    const yAxis = chart.scales['y'];
+
+    chart.data.labels.forEach((label, i) => {
+      const x = xAxis.getPixelForTick(i);
+      const nextX = xAxis.getPixelForTick(i + 1) || chart.width; // Use the chart width if there's no next tick
+      const width = nextX - x;
+
+      console.log("x, yAxis.top, width, yAxis.bottom - yAxis.top", x, yAxis.top, width, yAxis.bottom - yAxis.top)
+      ctx.save();
+      // ctx.fillStyle = isNightTime(label) ? 'grey' : 'white'; // Set fill color based on time
+      // ctx.fillRect(x, yAxis.top, width, yAxis.bottom - yAxis.top);
+
+      // Draw a vertical line at midnight
+      if (isMidnight(label)) {
+        ctx.beginPath();
+        ctx.moveTo(x, yAxis.top);
+        ctx.lineTo(x, yAxis.bottom);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'black';
+        ctx.stroke();
+      }
+
+
+
+      ctx.restore();
+    });
+  }
+};
+// night time end
+
+
+
 function createChart() {
-    // Prepar(ring your data for the chart
-//
+    // Preparing your data for the chart
+
     console.log("chart")
 
     let timestamps = data.map(obj => new Date(obj.timestamp * 1000));
@@ -80,7 +145,8 @@ options: {
                 // you can leave the y-axis as is or configure it as needed
             }
         }
-    }
+    },
+  // plugins: [backgroundColorPlugin]
         });
     };
 
