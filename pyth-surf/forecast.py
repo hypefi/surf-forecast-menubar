@@ -4,7 +4,7 @@ import json
 params={
     "spotId":"5842041f4e65fad6a7708cfb",
     "days":2,
-    "intervalHours":1,
+    "intervalHours":3,
     }
 spot=SpotForecast(params)
 

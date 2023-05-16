@@ -48,24 +48,39 @@ function createChart() {
         
 
         let myChart = new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: timestamps,
                 datasets: [{
                     label: 'surf_min',
                     data: surf_min,
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    cubicInterpolationMode: 'monotone',
                     borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
+                    pointStyle: false,
+                    borderWidth: 2,
+                    // tension: 3	
                 },
                 {
                     label: 'surf_max',
                     data: surf_max,
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
+                    cubicInterpolationMode: 'default',
+                    borderColor: 'rgba(100,149,237, 1)',
+                    pointStyle: false,
+                    borderWidth: 2
                 }]
+    },
+options: {
+        scales: {
+            x: {
+                display: false // this will hide the x axis
+            },
+            y: {
+                // you can leave the y-axis as is or configure it as needed
             }
+        }
+    }
         });
     };
 
