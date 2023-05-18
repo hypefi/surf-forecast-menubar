@@ -15,13 +15,13 @@ let data;
 
 async function loadData() {
     try {
-        let jsondata = await getData('wave', { spotId: '5842041f4e65fad6a7708890', days: 7, intervalHours: 2 });
+        let wave_jsondata = await getData('wave', { spotId: '5842041f4e65fad6a7708890', days: 7, intervalHours: 2 });
 
-        console.log(jsondata);
+        console.log(wave_jsondata);
         // data = JSON.parse(jsondata); // You probably want to parse the JSON data before using it
-        data = jsondata.data; // You probably want to parse the JSON data before using it
-        console.log(data);
-        createChart(); // Call the function that creates the chart after the data is loaded
+        wave_data = wave_jsondata.data; // You probably want to parse the JSON data before using it
+        console.log(wave_data);
+        createChart(wave_data); // Call the function that creates the chart after the data is loaded
     } catch (err) {
         console.error(err);
     }
@@ -106,14 +106,13 @@ const backgroundColorPlugin = {
 };
 // Night time end
 
-function createChart() {
+function createChart(wave_data) {
     // Preparing your data for the chart
 
     console.log("chart");
 
-    console.log(data)
   
-    data = data.wave
+    let data = wave_data
     let timestamps = data.map(obj => new Date(obj.timestamp * 1000));
     let surf_min = data.map(obj => obj.surf_min);
     let surf_max = data.map(obj => obj.surf_max);

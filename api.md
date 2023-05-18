@@ -81,3 +81,12 @@ string
 Auth token to get premium data access (optional)
 
 
+
+
+=====
+
+for the location :
+
+curl "https://services.surfline.com/search/site?q=bouznika&querySize=10&suggestionSize=10&newsSearch=true" | jq
+
+

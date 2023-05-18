@@ -7,4 +7,15 @@
  - Alerts
  - Notificaitons
  - what to show on the menubar 
- ask chatgpt for features
+
+==== todo next
+
+- plot chart for the day +=> chart + date 
+- plot three charts + weather of the day ( all the data you can get )
+- add arrow to plot next days charts 
+- add change location 
+- add data in the menubar
+Customize menubar :
+  - Add surfconditions now in the menubar 
+Add surf Alerts : 
+  - When the conditions are this and that, send me a notification, or email or whatsapp 
