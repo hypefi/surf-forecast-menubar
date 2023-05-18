@@ -112,10 +112,11 @@ function createChart(wave_data) {
     console.log("chart");
 
   
-    let data = wave_data
+    let data = wave_data.wave
+    console.log(data)
     let timestamps = data.map(obj => new Date(obj.timestamp * 1000));
-    let surf_min = data.map(obj => obj.surf_min);
-    let surf_max = data.map(obj => obj.surf_max);
+    let surf_min = data.map(obj => obj.surf.min);
+    let surf_max = data.map(obj => obj.surf.max);
 
     console.log(surf_min)
     console.log(surf_max)
