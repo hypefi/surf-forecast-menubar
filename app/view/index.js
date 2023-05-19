@@ -152,7 +152,14 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   console.log(td);
   let wid = wind_data.data.wind;
   console.log(wid);
-  let timestamps = wd.map((obj) => new Date(obj.timestamp * 1000));
+  // const date = new Date(timestamp);
+
+  // const hour = date.getUTCHours();
+  // const hour = date.getHours();
+
+
+
+  let timestamps = wd.map((obj) => new Date(obj.timestamp * 1000).getHours());
   let surf_min = wd.map((obj) => obj.surf.min);
   let surf_max = wd.map((obj) => obj.surf.max);
   let opti_score = wd.map((obj) => obj.surf.optimalScore);
