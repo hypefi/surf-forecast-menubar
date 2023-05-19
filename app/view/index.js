@@ -15,36 +15,42 @@ let data;
 async function loadData() {
   try {
     let wave_jsondata = await getData("wave", {
-      spotId: "5842041f4e65fad6a7708890",
+      spotId: "5842041f4e65fad6a7708cfb",
       days: 1,
-      intervalHours: 2,
+      intervalHours: 3,
     });
     let tides_jsondata = await getData("tides", {
-      spotId: "5842041f4e65fad6a7708890",
+      spotId: "5842041f4e65fad6a7708cfb",
       days: 1,
-      intervalHours: 2,
+      intervalHours: 3,
     });
     let wind_jsondata = await getData("wind", {
-      spotId: "5842041f4e65fad6a7708890",
+      spotId: "5842041f4e65fad6a7708cfb",
       days: 1,
-      intervalHours: 2,
+      intervalHours: 3,
     });
     let weather_jsondata = await getData("weather", {
-      spotId: "5842041f4e65fad6a7708890",
+      spotId: "5842041f4e65fad6a7708cfb",
       days: 1,
-      intervalHours: 2,
+      intervalHours: 3,
+    });
+    let rating_jsondata = await getData("rating", {
+      spotId: "5842041f4e65fad6a7708cfb",
+      days: 1,
+      intervalHours: 3,
     });
 
     console.log({ wave_jsondata });
     console.log({ wind_jsondata });
     console.log({ weather_jsondata });
     console.log({ tides_jsondata });
+    console.log({ rating_jsondata });
     // data = JSON.parse(jsondata); // You probably want to parse the JSON data before using it
     // wave_data = wave_jsondata.data; // You probably want to parse the JSON data before using it
     // tides_data = tides_jsondata.data; // You probably want to parse the JSON data before using it
     // console.log(wave_data);
     console.log(tides_jsondata);
-    createCharts(wave_jsondata, tides_jsondata, wind_jsondata, weather_jsondata); // Call the function that creates the chart after the data is loaded
+    createCharts(wave_jsondata, tides_jsondata, wind_jsondata, weather_jsondata, rating_jsondata); // Call the function that creates the chart after the data is loaded
     //swells
 
     //tides
@@ -135,7 +141,7 @@ const backgroundColorPlugin = {
 };
 // Night time end
 
-function createCharts(wave_data, tide_data, wind_data, weather_data) {
+function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   // Preparing your data for the chart
 
   console.log("chart");
@@ -149,6 +155,7 @@ function createCharts(wave_data, tide_data, wind_data, weather_data) {
   let timestamps = wd.map((obj) => new Date(obj.timestamp * 1000));
   let surf_min = wd.map((obj) => obj.surf.min);
   let surf_max = wd.map((obj) => obj.surf.max);
+  let opti_score = wd.map((obj) => obj.surf.optimalScore);
   //tide data 
   // let timestamps = td.map((obj) => new Date(obj.timestamp * 1000));
   let tide_height = td.map((obj) => obj.height);
@@ -174,6 +181,49 @@ function createCharts(wave_data, tide_data, wind_data, weather_data) {
   let ctt = document.getElementById("tideChart").getContext("2d");
   let ctwi = document.getElementById("windChart").getContext("2d");
 
+
+
+  // Wave Chart 
+
+  // And this is your color array, based on another parameter
+  
+  // var conditions = ["VERY POOR", "POOR", "POOR TO FAIR", "FAIR", "FAIR TO GOOD", "GOOD", "EPIC", "NONE"];
+  // console.log(ratings)
+
+  var colors = ratings.data.rating.map((condition) => {
+    console.log(condition.rating.key)
+    switch(condition.rating.key) {
+      case "VERY_POOR":
+        return 'rgb(244, 73, 109)'; 
+      case "POOR":
+        return 'rgb(255, 149, 0)';
+      case "POOR_TO_FAIR":
+        return 'rgb(255, 205, 30)';
+      case "FAIR":
+        return 'rgb(11, 214, 116)';
+      case "FAIR_TO_GOOD":
+        return 'rgb(0, 147, 113)';
+      case "GOOD":
+        return 'rgb(104, 81, 244)';
+      case "EPIC":
+        return 'rgb(92, 0, 208)';
+      case "NONE":
+        return 'rgb(77, 139, 167)';
+      default:
+        return 'rgb(0, 0, 0)'; // default color in case the condition is not in the list
+    }
+  });
+
+  // var colors = opti_score.map((value) => {
+  //   if (value < 30) {
+  //     return 'rgba(75, 192, 192, 0.2)';  // color for values less than 30
+  //   } else if (value < 70) {
+  //     return 'rgba(255, 99, 132, 0.2)';  // color for values between 30 and 70
+  //   } else {
+  //     return 'rgba(255, 205, 86, 0.2)';  // color for values over 70
+  //   }
+  // });
+
   let myChart = new Chart(ctx, {
     type: "bar",
     data: {
@@ -182,9 +232,11 @@ function createCharts(wave_data, tide_data, wind_data, weather_data) {
         {
           label: "surf_min",
           data: surf_min,
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-          cubicInterpolationMode: "monotone",
-          borderColor: "rgba(75, 192, 192, 1)",
+          backgroundColor: colors, // Pass the colors array here
+          borderColor: colors.map(color => color.replace('0.2', '1')), 
+        //backgroundColor: "rgba(75, 192, 192, 0.2)",
+          // cubicInterpolationMode: "monotone",
+          // borderColor: "rgba(75, 192, 192, 1)",
           pointStyle: false,
           borderWidth: 2,
           // tension: 3
@@ -192,9 +244,11 @@ function createCharts(wave_data, tide_data, wind_data, weather_data) {
         {
           label: "surf_max",
           data: surf_max,
-          backgroundColor: "rgba(255, 99, 132, 0.2)",
-          cubicInterpolationMode: "default",
-          borderColor: "rgba(100,149,237, 1)",
+          backgroundColor: colors, // Pass the colors array here
+          borderColor: colors.map(color => color.replace('0.2', '1')), 
+          // backgroundColor: "rgba(255, 99, 132, 0.2)",
+          // cubicInterpolationMode: "default",
+          // borderColor: "rgba(100,149,237, 1)",
           pointStyle: false,
           borderWidth: 2,
         },

@@ -94,3 +94,8 @@ curl "https://services.surfline.com/search/site?q=bouznika&querySize=10&suggesti
 conditions 5 days, the small boxes with conditions 
 
 ❯ curl "https://services.surfline.com/kbyg/regions/forecasts/conditions?subregionId=58581a836630e24c4487906a&days=5" | jq
+
+
+Ratings FAIT, NOT FAIR ...
+
+curl "https://services.surfline.com/kbyg/spots/forecasts/rating?spotId=5842041f4e65fad6a7708cfb&days=5&intervalHours=1"
