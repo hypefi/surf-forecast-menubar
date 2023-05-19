@@ -90,3 +90,7 @@ for the location :
 curl "https://services.surfline.com/search/site?q=bouznika&querySize=10&suggestionSize=10&newsSearch=true" | jq
 
 
+
+conditions 5 days, the small boxes with conditions 
+
+❯ curl "https://services.surfline.com/kbyg/regions/forecasts/conditions?subregionId=58581a836630e24c4487906a&days=5" | jq

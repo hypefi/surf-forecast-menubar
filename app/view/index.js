@@ -44,7 +44,7 @@ async function loadData() {
     // tides_data = tides_jsondata.data; // You probably want to parse the JSON data before using it
     // console.log(wave_data);
     console.log(tides_jsondata);
-    createCharts(wave_jsondata, tides_jsondata); // Call the function that creates the chart after the data is loaded
+    createCharts(wave_jsondata, tides_jsondata, wind_jsondata, weather_jsondata); // Call the function that creates the chart after the data is loaded
     //swells
 
     //tides
@@ -144,6 +144,8 @@ function createCharts(wave_data, tide_data, wind_data, weather_data) {
   console.log(wd)
   let td = tide_data.data.tides;
   console.log(td);
+  let wid = wind_data.data.wind;
+  console.log(wid);
   let timestamps = wd.map((obj) => new Date(obj.timestamp * 1000));
   let surf_min = wd.map((obj) => obj.surf.min);
   let surf_max = wd.map((obj) => obj.surf.max);
@@ -152,9 +154,14 @@ function createCharts(wave_data, tide_data, wind_data, weather_data) {
   let tide_height = td.map((obj) => obj.height);
   let tide_type = td.map((obj) => obj.type);
   //winddata
-
-
+  let wind_direction = wid.map((obj) => obj.direction);
+  let wind_directionType = wid.map((obj) => obj.directionType);
+  let wind_gust = wid.map((obj) => obj.gust);
+  let wind_optimalScore = wid.map((obj) => obj.optimalScore);
+  let wind_speed = wid.map((obj) => obj.speed);
+  let wind_utcOffset = wid.map((obj) => obj.utcOffset);
   //weather data 
+  
   
 
   console.log(surf_min);
@@ -165,7 +172,7 @@ function createCharts(wave_data, tide_data, wind_data, weather_data) {
 
   let ctx = document.getElementById("myChart").getContext("2d");
   let ctt = document.getElementById("tideChart").getContext("2d");
-  let ctw = document.getElementById("windChart").getContext("2d");
+  let ctwi = document.getElementById("windChart").getContext("2d");
 
   let myChart = new Chart(ctx, {
     type: "bar",
@@ -207,6 +214,7 @@ function createCharts(wave_data, tide_data, wind_data, weather_data) {
   });
 
 
+  // Tide Chart 
   let tideChart = new Chart(ctt, {
     type: "bar",
     data: {
@@ -251,8 +259,74 @@ function createCharts(wave_data, tide_data, wind_data, weather_data) {
           // you can leave the y-axis as is or configure it as needed
         },
       },
+    })
+    // plugins: [backgroundColorPlugin]
+
+
+  // Wind Chart 
+  let windChart = new Chart(ctwi, {
+    type: "bar",
+    data: {
+      labels: timestamps,
+      datasets: [
+        {
+        label: "Wind Speed",
+        data: wind_speed,
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 2,
+        },
+        {
+        label: "Wind Gust",
+        data: wind_gust,
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 2,
+        }  
+       ],
+    },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          },
+          x: {
+            beginAtZero: true,
+            stacked: true,  // This will cause bars to stack
+          }
+        }
+      }
+    // options: {
+    //     responsive: true,
+    //     tooltips: {
+    //       mode: 'index', // Display all tooltips when hovering multiple bars
+    //       intersect: false,
+    //       callbacks: {
+    //         title: function(tooltipItems, data) {
+    //           // You can modify this function to return a string related to each bar
+    //           const index = tooltipItems[0].index;
+    //           return data.labels[index];
+    //         },
+    //         label: function(tooltipItems, data) {
+    //           // You can modify this function to return a string related to each bar
+    //           const dataset = data.datasets[tooltipItems.datasetIndex];
+    //           const value = dataset.data[tooltipItems.index];
+    //           return 'Value: ' + value;
+    //         }
+    //       }
+    //     },
+      // scales: {
+      //   x: {
+      //     display: false, // this will hide the x axis
+      //   },
+      //   y: {
+      //     // you can leave the y-axis as is or configure it as needed
+      //   },
+      // },
     }
     // plugins: [backgroundColorPlugin]
+
   );
 
 
