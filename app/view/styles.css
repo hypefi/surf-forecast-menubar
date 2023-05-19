@@ -196,3 +196,32 @@ input:checked + .slider:before {
 /*     width: 100% !important; */
 /*     height: 100% !important; */
 /* } */
+
+
+/* card css */ 
+
+.card {
+  display: inline-block;
+  width: calc(33.33% - 10px);
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 10px;
+}
+
+.card h2 {
+  font-weight: bold;
+  color: #000;
+}
+
+.surf-info {
+  width: calc(33.33% - 10px);
+}
+
+.weather-info, 
+.wind-info,
+.tide-info,
+.wetsuit {
+  width: calc(22.22% - 10px);
+}
