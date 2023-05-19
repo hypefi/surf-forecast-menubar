@@ -194,23 +194,23 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
     console.log(condition.rating.key)
     switch(condition.rating.key) {
       case "VERY_POOR":
-        return 'rgb(244, 73, 109)'; 
+        return 'rgb(244, 73, 109,0.2)'; 
       case "POOR":
-        return 'rgb(255, 149, 0)';
+        return 'rgb(255, 149, 0,0.2)';
       case "POOR_TO_FAIR":
-        return 'rgb(255, 205, 30)';
+        return 'rgb(255, 205, 30,0.2)';
       case "FAIR":
-        return 'rgb(11, 214, 116)';
+        return 'rgb(11, 214, 116,0.2)';
       case "FAIR_TO_GOOD":
-        return 'rgb(0, 147, 113)';
+        return 'rgb(0, 147, 113,0.2)';
       case "GOOD":
-        return 'rgb(104, 81, 244)';
+        return 'rgb(104, 81, 244,0.2)';
       case "EPIC":
-        return 'rgb(92, 0, 208)';
+        return 'rgb(92, 0, 208,0.2)';
       case "NONE":
-        return 'rgb(77, 139, 167)';
+        return 'rgb(77, 139, 167,0.2)';
       default:
-        return 'rgb(0, 0, 0)'; // default color in case the condition is not in the list
+        return 'rgb(0, 0, 0,0.2)'; // default color in case the condition is not in the list
     }
   });
 
@@ -257,8 +257,10 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
     options: {
       scales: {
         x: {
-          display: false, // this will hide the x axis
-        },
+            labels: false,
+            beginAtZero: true,
+            stacked: true,  // This will cause bars to stack
+          },
         y: {
           // you can leave the y-axis as is or configure it as needed
         },
