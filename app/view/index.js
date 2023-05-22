@@ -58,7 +58,7 @@ async function loadData() {
     // console.log(wave_data);
     console.log(tides_jsondata);
     createCharts(wave_jsondata, tides_jsondata, wind_jsondata, weather_jsondata, rating_jsondata); // Call the function that creates the chart after the data is loaded
-    printdata(conditions_jsondata);
+    printdata(conditions_jsondata, wind_jsondata, tides_jsondata, weather_jsondata );
     //swells
 
     //tides
@@ -158,12 +158,24 @@ const backgroundColorPlugin = {
   },
 };
 // Night time end
+// Function to find the closest timestamp to the current time
+function findClosestTimestamp(data, currentTimestamp) {
+    console.log(data)
+    let closestTimestampIndex = data.reduce((prev, curr, index) => 
+        (Math.abs(curr.timestamp - currentTimestamp) < Math.abs(data[prev].timestamp - currentTimestamp) ? index : prev)
+    , 0);
+    return data[closestTimestampIndex];
+}
 
-function printdata(conditions){
+
+function printdata(conditions, wind, tides, weather){
   
   let cd = conditions.data;
   let ac = conditions.associated;
+  let wi = wind.data.wind;
 
+  console.log({wi})
+  console.log(wi)
   console.log(cd)
 
   var today = new Date();
@@ -199,6 +211,19 @@ function printdata(conditions){
   var humanRelation = document.createElement('p');
   humanRelation.textContent = 'Human relation: ' + timeOfDay.humanRelation;
   surfInfoDiv.appendChild(humanRelation);
+// wind 
+  let currentTimeStamp = Math.floor(Date.now() / 1000); // Current Unix timestamp in seconds
+  let closestData = findClosestTimestamp(wi, currentTimeStamp);
+
+    let htmlContent = `
+        <h2> Wind </h2> 
+        <p>Speed: ${closestData.speed}</p>
+        <p>Direction: ${closestData.direction}</p>
+        <p>Direction Type: ${closestData.directionType}</p>
+        <p>Gust: ${closestData.gust}</p>
+    `;
+
+    document.querySelector('.wind-info').innerHTML = htmlContent;
 
 
 }
@@ -210,11 +235,11 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   console.log("chart");
 
   let wd = wave_data.data.wave;
-  console.log(wd)
+  // console.log(wd)
   let td = tide_data.data.tides;
-  console.log(td);
+  // console.log(td);
   let wid = wind_data.data.wind;
-  console.log(wid);
+  // console.log(wid);
   // const date = new Date(timestamp);
 
   // const hour = date.getUTCHours();
@@ -241,9 +266,9 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   
   
 
-  console.log(surf_min);
-  console.log(surf_max);
-  console.log(timestamps);
+  // console.log(surf_min);
+  // console.log(surf_max);
+  // console.log(timestamps);
 
   const Chart = require("chart.js/auto").Chart;
 
@@ -261,7 +286,7 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   // console.log(ratings)
 
   var colors = ratings.data.rating.map((condition) => {
-    console.log(condition.rating.key)
+    // console.log(condition.rating.key)
     switch(condition.rating.key) {
       case "VERY_POOR":
         return 'rgb(244, 73, 109,0.2)'; 
