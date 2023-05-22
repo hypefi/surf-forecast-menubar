@@ -40,6 +40,12 @@ async function loadData() {
       intervalHours: 3,
     });
 
+    let conditions_jsondata = await getData("conditions", {
+      subregionId: "5842041f4e65fad6a7708cfb",
+      days: 1,
+      intervalHours: 3,
+    });
+  
     console.log({ wave_jsondata });
     console.log({ wind_jsondata });
     console.log({ weather_jsondata });
@@ -63,7 +69,16 @@ async function loadData() {
 }
 
 async function getData(type, params) {
-  const baseURL = "https://services.surfline.com/kbyg/spots/forecasts/";
+  if(type == "conditions"){
+      
+    const baseURL = "https://services.surfline.com/kbyg/regions/forecasts/";
+
+  }else{
+
+    const baseURL = "https://services.surfline.com/kbyg/spots/forecasts/";
+
+  }
+
 
   let urlParams = new URLSearchParams(params).toString();
   let url = `${baseURL}${type}?${urlParams}`;
