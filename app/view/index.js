@@ -45,7 +45,7 @@ async function loadData() {
       days: 1,
       // intervalHours: 3,
     });
-  
+
     console.log({ wave_jsondata });
     console.log({ wind_jsondata });
     console.log({ weather_jsondata });
@@ -57,8 +57,19 @@ async function loadData() {
     // tides_data = tides_jsondata.data; // You probably want to parse the JSON data before using it
     // console.log(wave_data);
     console.log(tides_jsondata);
-    createCharts(wave_jsondata, tides_jsondata, wind_jsondata, weather_jsondata, rating_jsondata); // Call the function that creates the chart after the data is loaded
-    printdata(conditions_jsondata, wind_jsondata, tides_jsondata, weather_jsondata );
+    createCharts(
+      wave_jsondata,
+      tides_jsondata,
+      wind_jsondata,
+      weather_jsondata,
+      rating_jsondata
+    ); // Call the function that creates the chart after the data is loaded
+    printdata(
+      conditions_jsondata,
+      wind_jsondata,
+      tides_jsondata,
+      weather_jsondata
+    );
     //swells
 
     //tides
@@ -72,16 +83,11 @@ async function loadData() {
 
 async function getData(type, params) {
   let baseURL;
-  if(type == "conditions"){
-      
+  if (type == "conditions") {
     baseURL = "https://services.surfline.com/kbyg/regions/forecasts/";
-
-  }else{
-
+  } else {
     baseURL = "https://services.surfline.com/kbyg/spots/forecasts/";
-
   }
-
 
   let urlParams = new URLSearchParams(params).toString();
   let url = `${baseURL}${type}?${urlParams}`;
@@ -160,46 +166,71 @@ const backgroundColorPlugin = {
 // Night time end
 // Function to find the closest timestamp to the current time
 function findClosestTimestamp(data, currentTimestamp) {
-    console.log(data)
-    let closestTimestampIndex = data.reduce((prev, curr, index) => 
-        (Math.abs(curr.timestamp - currentTimestamp) < Math.abs(data[prev].timestamp - currentTimestamp) ? index : prev)
-    , 0);
-    return data[closestTimestampIndex];
+  console.log(data);
+  let closestTimestampIndex = data.reduce(
+    (prev, curr, index) =>
+      Math.abs(curr.timestamp - currentTimestamp) <
+      Math.abs(data[prev].timestamp - currentTimestamp)
+        ? index
+        : prev,
+    0
+  );
+  return data[closestTimestampIndex];
 }
 
+function findClosestTide(data, currentTimestamp) {
+  let closestTideIndex = data.reduce(
+    (prev, curr, index) =>
+      Math.abs(curr.timestamp - currentTimestamp) <
+      Math.abs(data[prev].timestamp - currentTimestamp)
+        ? index
+        : prev,
+    0
+  );
+  return {
+    closestTide: data[closestTideIndex],
+    closestTideIndex: closestTideIndex,
+  };
+}
 
-function printdata(conditions, wind, tides, weather){
-  
+function printdata(conditions, wind, tides, weather) {
   let cd = conditions.data;
   let ac = conditions.associated;
   let wi = wind.data.wind;
+  let tideData = tides.data.tides;
 
-  console.log({wi})
-  console.log(wi)
-  console.log(cd)
+  console.log({ wi });
+  console.log(wi);
+  console.log(cd);
+  console.log(tideData);
 
   var today = new Date();
   var currentHour = today.getHours();
-  
-  var surfInfo = cd.conditions[0];  // Considering data for today is the first element
-  var timeOfDay = (currentHour < 12) ? surfInfo.am : surfInfo.pm;
+
+  var surfInfo = cd.conditions[0]; // Considering data for today is the first element
+  var timeOfDay = currentHour < 12 ? surfInfo.am : surfInfo.pm;
 
   // Getting the surf info div
-  var surfInfoDiv = document.querySelector('.surf-info');
+  var surfInfoDiv = document.querySelector(".surf-info");
 
   // Adding the title
-  var title = document.createElement('h2');
-  title.textContent = 'Surf Info for ' + surfInfo.forecastDay;
+  var title = document.createElement("h2");
+  title.textContent = "Surf Info for " + surfInfo.forecastDay;
   surfInfoDiv.appendChild(title);
 
   // Adding the observation
-  var observation = document.createElement('p');
-  observation.textContent = 'Observation: ' + timeOfDay.observation;
+  var observation = document.createElement("p");
+  observation.textContent = "Observation: " + timeOfDay.observation;
   surfInfoDiv.appendChild(observation);
 
   // Adding the min height
-  var minHeight = document.createElement('p');
-  minHeight.textContent = 'Min - Max wave height: ' + timeOfDay.minHeight + "-" + timeOfDay.maxHeight + ac.units.waveHeight;
+  var minHeight = document.createElement("p");
+  minHeight.textContent =
+    "Min - Max wave height: " +
+    timeOfDay.minHeight +
+    "-" +
+    timeOfDay.maxHeight +
+    ac.units.waveHeight;
   surfInfoDiv.appendChild(minHeight);
 
   // Adding the max height
@@ -208,14 +239,14 @@ function printdata(conditions, wind, tides, weather){
   // surfInfoDiv.appendChild(maxHeight);
 
   // Adding the human relation
-  var humanRelation = document.createElement('p');
-  humanRelation.textContent = 'Human relation: ' + timeOfDay.humanRelation;
+  var humanRelation = document.createElement("p");
+  humanRelation.textContent = "Human relation: " + timeOfDay.humanRelation;
   surfInfoDiv.appendChild(humanRelation);
-// wind 
+  // wind
   let currentTimeStamp = Math.floor(Date.now() / 1000); // Current Unix timestamp in seconds
   let closestData = findClosestTimestamp(wi, currentTimeStamp);
 
-    let htmlContent = `
+  let htmlContent = `
         <h2> Wind </h2> 
         <p>Speed: ${closestData.speed}</p>
         <p>Direction: ${closestData.direction}</p>
@@ -223,11 +254,29 @@ function printdata(conditions, wind, tides, weather){
         <p>Gust: ${closestData.gust}</p>
     `;
 
-    document.querySelector('.wind-info').innerHTML = htmlContent;
+  document.querySelector(".wind-info").innerHTML = htmlContent;
+  //tide
+  let closestTideData = findClosestTide(tideData, currentTimeStamp);
 
+  let tideStatus = "Unknown";
+  if (closestTideData.closestTideIndex < tideData.length - 1) {
+    if (
+      tideData[closestTideData.closestTideIndex + 1].height >
+      closestTideData.closestTide.height
+    ) {
+      tideStatus = "Rising";
+    } else {
+      tideStatus = "Falling";
+    }
+  }
 
+  let tideContent = `
+        <p>Height: ${closestTideData.closestTide.height}</p>
+        <p>Tide Status: ${tideStatus}</p>
+    `;
+
+  document.querySelector(".tide-info").innerHTML = tideContent;
 }
-
 
 function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   // Preparing your data for the chart
@@ -245,13 +294,11 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   // const hour = date.getUTCHours();
   // const hour = date.getHours();
 
-
-
   let timestamps = wd.map((obj) => new Date(obj.timestamp * 1000).getHours());
   let surf_min = wd.map((obj) => obj.surf.min);
   let surf_max = wd.map((obj) => obj.surf.max);
   let opti_score = wd.map((obj) => obj.surf.optimalScore);
-  //tide data 
+  //tide data
   // let timestamps = td.map((obj) => new Date(obj.timestamp * 1000));
   let tide_height = td.map((obj) => obj.height);
   let tide_type = td.map((obj) => obj.type);
@@ -262,9 +309,7 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   let wind_optimalScore = wid.map((obj) => obj.optimalScore);
   let wind_speed = wid.map((obj) => obj.speed);
   let wind_utcOffset = wid.map((obj) => obj.utcOffset);
-  //weather data 
-  
-  
+  //weather data
 
   // console.log(surf_min);
   // console.log(surf_max);
@@ -276,36 +321,34 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   let ctt = document.getElementById("tideChart").getContext("2d");
   let ctwi = document.getElementById("windChart").getContext("2d");
 
-
-
-  // Wave Chart 
+  // Wave Chart
 
   // And this is your color array, based on another parameter
-  
+
   // var conditions = ["VERY POOR", "POOR", "POOR TO FAIR", "FAIR", "FAIR TO GOOD", "GOOD", "EPIC", "NONE"];
   // console.log(ratings)
 
   var colors = ratings.data.rating.map((condition) => {
     // console.log(condition.rating.key)
-    switch(condition.rating.key) {
+    switch (condition.rating.key) {
       case "VERY_POOR":
-        return 'rgb(244, 73, 109,0.2)'; 
+        return "rgb(244, 73, 109,0.2)";
       case "POOR":
-        return 'rgb(255, 149, 0,0.2)';
+        return "rgb(255, 149, 0,0.2)";
       case "POOR_TO_FAIR":
-        return 'rgb(255, 205, 30,0.2)';
+        return "rgb(255, 205, 30,0.2)";
       case "FAIR":
-        return 'rgb(11, 214, 116,0.2)';
+        return "rgb(11, 214, 116,0.2)";
       case "FAIR_TO_GOOD":
-        return 'rgb(0, 147, 113,0.2)';
+        return "rgb(0, 147, 113,0.2)";
       case "GOOD":
-        return 'rgb(104, 81, 244,0.2)';
+        return "rgb(104, 81, 244,0.2)";
       case "EPIC":
-        return 'rgb(92, 0, 208,0.2)';
+        return "rgb(92, 0, 208,0.2)";
       case "NONE":
-        return 'rgb(77, 139, 167,0.2)';
+        return "rgb(77, 139, 167,0.2)";
       default:
-        return 'rgb(0, 0, 0,0.2)'; // default color in case the condition is not in the list
+        return "rgb(0, 0, 0,0.2)"; // default color in case the condition is not in the list
     }
   });
 
@@ -328,8 +371,8 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
           label: "surf_min",
           data: surf_min,
           backgroundColor: colors, // Pass the colors array here
-          borderColor: colors.map(color => color.replace('0.2', '1')), 
-        //backgroundColor: "rgba(75, 192, 192, 0.2)",
+          borderColor: colors.map((color) => color.replace("0.2", "1")),
+          //backgroundColor: "rgba(75, 192, 192, 0.2)",
           // cubicInterpolationMode: "monotone",
           // borderColor: "rgba(75, 192, 192, 1)",
           pointStyle: false,
@@ -340,7 +383,7 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
           label: "surf_max",
           data: surf_max,
           backgroundColor: colors, // Pass the colors array here
-          borderColor: colors.map(color => color.replace('0.2', '1')), 
+          borderColor: colors.map((color) => color.replace("0.2", "1")),
           // backgroundColor: "rgba(255, 99, 132, 0.2)",
           // cubicInterpolationMode: "default",
           // borderColor: "rgba(100,149,237, 1)",
@@ -352,10 +395,10 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
     options: {
       scales: {
         x: {
-            labels: false,
-            beginAtZero: true,
-            stacked: true,  // This will cause bars to stack
-          },
+          labels: false,
+          beginAtZero: true,
+          stacked: true, // This will cause bars to stack
+        },
         y: {
           // you can leave the y-axis as is or configure it as needed
         },
@@ -364,8 +407,7 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
     // plugins: [backgroundColorPlugin]
   });
 
-
-  // Tide Chart 
+  // Tide Chart
   let tideChart = new Chart(ctt, {
     type: "bar",
     data: {
@@ -380,7 +422,7 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
           pointStyle: false,
           borderWidth: 2,
           // tension: 3
-        }
+        },
       ],
     },
     // options: {
@@ -402,71 +444,72 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
     //         }
     //       }
     //     },
-      scales: {
-        x: {
-          display: false, // this will hide the x axis
-        },
-        y: {
-          // you can leave the y-axis as is or configure it as needed
-        },
+    scales: {
+      x: {
+        display: false, // this will hide the x axis
       },
-    })
-    // plugins: [backgroundColorPlugin]
-
-
-  // Wind Chart 
-  let windChart = new Chart(ctwi, {
-    type: "bar",
-    data: {
-      labels: timestamps,
-      datasets: [
-        {
-        label: "Wind Speed",
-        data: wind_speed,
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 2,
-        },
-        {
-        label: "Wind Gust",
-        data: wind_gust,
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "rgba(255, 99, 132, 1)",
-        borderWidth: 2,
-        }  
-       ],
+      y: {
+        // you can leave the y-axis as is or configure it as needed
+      },
     },
+  });
+  // plugins: [backgroundColorPlugin]
+
+  // Wind Chart
+  let windChart = new Chart(
+    ctwi,
+    {
+      type: "bar",
+      data: {
+        labels: timestamps,
+        datasets: [
+          {
+            label: "Wind Speed",
+            data: wind_speed,
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 2,
+          },
+          {
+            label: "Wind Gust",
+            data: wind_gust,
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "rgba(255, 99, 132, 1)",
+            borderWidth: 2,
+          },
+        ],
+      },
       options: {
         responsive: true,
         scales: {
           y: {
-            beginAtZero: true
+            beginAtZero: true,
           },
           x: {
             beginAtZero: true,
-            stacked: true,  // This will cause bars to stack
-          }
-        }
-      }
-    // options: {
-    //     responsive: true,
-    //     tooltips: {
-    //       mode: 'index', // Display all tooltips when hovering multiple bars
-    //       intersect: false,
-    //       callbacks: {
-    //         title: function(tooltipItems, data) {
-    //           // You can modify this function to return a string related to each bar
-    //           const index = tooltipItems[0].index;
-    //           return data.labels[index];
-    //         },
-    //         label: function(tooltipItems, data) {
-    //           // You can modify this function to return a string related to each bar
-    //           const dataset = data.datasets[tooltipItems.datasetIndex];
-    //           const value = dataset.data[tooltipItems.index];
-    //           return 'Value: ' + value;
-    //         }
-    //       }
-    //     },
+            stacked: true, // This will cause bars to stack
+          },
+        },
+      },
+      // options: {
+      //     responsive: true,
+      //     tooltips: {
+      //       mode: 'index', // Display all tooltips when hovering multiple bars
+      //       intersect: false,
+      //       callbacks: {
+      //         title: function(tooltipItems, data) {
+      //           // You can modify this function to return a string related to each bar
+      //           const index = tooltipItems[0].index;
+      //           return data.labels[index];
+      //         },
+      //         label: function(tooltipItems, data) {
+      //           // You can modify this function to return a string related to each bar
+      //           const dataset = data.datasets[tooltipItems.datasetIndex];
+      //           const value = dataset.data[tooltipItems.index];
+      //           return 'Value: ' + value;
+      //         }
+      //       }
+      //     },
       // scales: {
       //   x: {
       //     display: false, // this will hide the x axis
@@ -477,10 +520,5 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
       // },
     }
     // plugins: [backgroundColorPlugin]
-
   );
-
-
-
-
 }
