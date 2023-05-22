@@ -13,8 +13,8 @@
 - plot chart for the day +=> chart + date 
 - plot three charts + weather of the day ( all the data you can get )
 - add arrow to plot next days charts 
-- add change location 
-- add data in the menubar
+- add change location ==> search city ==> curl api, gives you spot IDs, give them to user, click to choose one 
+- add data in the menubar ==> current conditions ( will be customizable )
 Customize menubar :
   - Add surfconditions now in the menubar 
 Add surf Alerts : 
