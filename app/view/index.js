@@ -41,9 +41,9 @@ async function loadData() {
     });
 
     let conditions_jsondata = await getData("conditions", {
-      subregionId: "5842041f4e65fad6a7708cfb",
+      spotId: "5842041f4e65fad6a7708cfb",
       days: 1,
-      intervalHours: 3,
+      // intervalHours: 3,
     });
   
     console.log({ wave_jsondata });
@@ -51,12 +51,14 @@ async function loadData() {
     console.log({ weather_jsondata });
     console.log({ tides_jsondata });
     console.log({ rating_jsondata });
+    console.log({ conditions_jsondata });
     // data = JSON.parse(jsondata); // You probably want to parse the JSON data before using it
     // wave_data = wave_jsondata.data; // You probably want to parse the JSON data before using it
     // tides_data = tides_jsondata.data; // You probably want to parse the JSON data before using it
     // console.log(wave_data);
     console.log(tides_jsondata);
     createCharts(wave_jsondata, tides_jsondata, wind_jsondata, weather_jsondata, rating_jsondata); // Call the function that creates the chart after the data is loaded
+    printdata(conditions_jsondata);
     //swells
 
     //tides
@@ -69,13 +71,14 @@ async function loadData() {
 }
 
 async function getData(type, params) {
+  let baseURL;
   if(type == "conditions"){
       
-    const baseURL = "https://services.surfline.com/kbyg/regions/forecasts/";
+    baseURL = "https://services.surfline.com/kbyg/regions/forecasts/";
 
   }else{
 
-    const baseURL = "https://services.surfline.com/kbyg/spots/forecasts/";
+    baseURL = "https://services.surfline.com/kbyg/spots/forecasts/";
 
   }
 
@@ -155,6 +158,51 @@ const backgroundColorPlugin = {
   },
 };
 // Night time end
+
+function printdata(conditions){
+  
+  let cd = conditions.data;
+  let ac = conditions.associated;
+
+  console.log(cd)
+
+  var today = new Date();
+  var currentHour = today.getHours();
+  
+  var surfInfo = cd.conditions[0];  // Considering data for today is the first element
+  var timeOfDay = (currentHour < 12) ? surfInfo.am : surfInfo.pm;
+
+  // Getting the surf info div
+  var surfInfoDiv = document.querySelector('.surf-info');
+
+  // Adding the title
+  var title = document.createElement('h2');
+  title.textContent = 'Surf Info for ' + surfInfo.forecastDay;
+  surfInfoDiv.appendChild(title);
+
+  // Adding the observation
+  var observation = document.createElement('p');
+  observation.textContent = 'Observation: ' + timeOfDay.observation;
+  surfInfoDiv.appendChild(observation);
+
+  // Adding the min height
+  var minHeight = document.createElement('p');
+  minHeight.textContent = 'Min - Max wave height: ' + timeOfDay.minHeight + "-" + timeOfDay.maxHeight + ac.units.waveHeight;
+  surfInfoDiv.appendChild(minHeight);
+
+  // Adding the max height
+  // var maxHeight = document.createElement('p');
+  // maxHeight.textContent = 'Max wave height: ' + + ' meters';
+  // surfInfoDiv.appendChild(maxHeight);
+
+  // Adding the human relation
+  var humanRelation = document.createElement('p');
+  humanRelation.textContent = 'Human relation: ' + timeOfDay.humanRelation;
+  surfInfoDiv.appendChild(humanRelation);
+
+
+}
+
 
 function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   // Preparing your data for the chart
