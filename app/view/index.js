@@ -32,7 +32,7 @@ async function loadData() {
     let weather_jsondata = await getData("weather", {
       spotId: "5842041f4e65fad6a7708cfb",
       days: 1,
-      intervalHours: 3,
+      intervalHours: 1,
     });
     let rating_jsondata = await getData("rating", {
       spotId: "5842041f4e65fad6a7708cfb",
@@ -228,12 +228,14 @@ function printdata(conditions, wind, tides, weather) {
   let cd = conditions.data;
   let ac = conditions.associated;
   let wi = wind.data.wind;
+  let we = weather.data.weather;
   let tideData = tides.data.tides;
 
   console.log({ wi });
   console.log(wi);
   console.log(cd);
   console.log(tideData);
+  console.log(we)
 
   var today = new Date();
   var currentHour = today.getHours();
@@ -275,17 +277,24 @@ function printdata(conditions, wind, tides, weather) {
   surfInfoDiv.appendChild(humanRelation);
   // wind
   let currentTimeStamp = Math.floor(Date.now() / 1000); // Current Unix timestamp in seconds
-  let closestData = findClosestTimestamp(wi, currentTimeStamp);
+  let closestWind = findClosestTimestamp(wi, currentTimeStamp);
+  let closestWeather = findClosestTimestamp(we, currentTimeStamp);
 
   let htmlContent = `
         <h2> Wind </h2> 
-        <p>Speed: ${closestData.speed}</p>
-        <p>Direction: ${closestData.direction}</p>
-        <p>Direction Type: ${closestData.directionType}</p>
-        <p>Gust: ${closestData.gust}</p>
+        <p>Speed: ${closestWind.speed}</p>
+        <p>Direction: ${closestWind.direction}</p>
+        <p>Direction Type: ${closestWind.directionType}</p>
+        <p>Gust: ${closestWind.gust}</p>
+    `;
+  let WeatherContent = `
+        <h2> Weather </h2> 
+        <p>Condition: ${closestWeather.condition}</p>
+        <p>Temperature: ${closestWeather.temperature}</p>
     `;
 
   document.querySelector(".wind-info").innerHTML = htmlContent;
+  document.querySelector(".weather-info").innerHTML = WeatherContent;
   //tide
   let closestTideData = findClosestTide(tideData, currentTimeStamp);
 
