@@ -228,6 +228,7 @@ function printdata(conditions, wind, tides, weather) {
   let cd = conditions.data;
   let ac = conditions.associated;
   let wi = wind.data.wind;
+  let un = wind.associated.units;
   let we = weather.data.weather;
   let tideData = tides.data.tides;
 
@@ -263,7 +264,7 @@ function printdata(conditions, wind, tides, weather) {
     timeOfDay.minHeight +
     "-" +
     timeOfDay.maxHeight +
-    ac.units.waveHeight;
+    ac.units.waveHeight.toLowerCase();
   surfInfoDiv.appendChild(minHeight);
 
   // Adding the max height
@@ -282,15 +283,15 @@ function printdata(conditions, wind, tides, weather) {
 
   let htmlContent = `
         <h2> Wind </h2> 
-        <p>Speed: ${closestWind.speed}</p>
+        <p>Speed: ${closestWind.speed.toFixed(2)} ${un.windSpeed.toLowerCase()} </p>
         <p>Direction: ${closestWind.direction}</p>
         <p>Direction Type: ${closestWind.directionType}</p>
-        <p>Gust: ${closestWind.gust}</p>
+        <p>Gust: ${closestWind.gust.toFixed(2)} ${un.windSpeed.toLowerCase()} </p>
     `;
   let WeatherContent = `
         <h2> Weather </h2> 
         <p>Condition: ${closestWeather.condition}</p>
-        <p>Temperature: ${closestWeather.temperature}</p>
+        <p>Temperature: ${closestWeather.temperature.toFixed(1)}${un.temperature} </p>
     `;
 
   document.querySelector(".wind-info").innerHTML = htmlContent;
@@ -313,12 +314,12 @@ function printdata(conditions, wind, tides, weather) {
 
   let nextHighOrLowTide = findNextHighOrLowTide(tideData, closestTideData.closestTideIndex + 1);
   console.log(nextHighOrLowTide);
-  let nextHighOrLowTideContent = nextHighOrLowTide ? `<p>Next ${nextHighOrLowTide.type} Tide Height: ${nextHighOrLowTide.height} at ${convertTimestampToReadableHour(nextHighOrLowTide.timestamp)} </p>` : '';
+  let nextHighOrLowTideContent = nextHighOrLowTide ? `<p>Next ${nextHighOrLowTide.type} Tide Height: ${nextHighOrLowTide.height} ${un.waveHeight.toLowerCase()} at ${convertTimestampToReadableHour(nextHighOrLowTide.timestamp)} </p>` : '';
 
 
   let tideContent = `
         <h2> Tide </h2>
-        <p>Height: ${closestTideData.closestTide.height}</p>
+        <p>Height: ${closestTideData.closestTide.height} ${un.tideHeight.toLowerCase()} </p>
         <p>Tide Status: ${tideStatus}</p>
         ${nextHighOrLowTideContent}
     `;
