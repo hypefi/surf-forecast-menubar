@@ -193,6 +193,18 @@ function findClosestTide(data, currentTimestamp) {
   };
 }
 
+
+function findNextHighOrLowTide(data, startFromIndex) {
+    for(let i = startFromIndex; i < data.length; i++) {
+        // console.log(i)
+        if(data[i].type === 'HIGH' || data[i].type === 'LOW') {
+            return data[i];
+        }
+    }
+    return null;
+}
+
+
 function printdata(conditions, wind, tides, weather) {
   let cd = conditions.data;
   let ac = conditions.associated;
@@ -240,7 +252,7 @@ function printdata(conditions, wind, tides, weather) {
 
   // Adding the human relation
   var humanRelation = document.createElement("p");
-  humanRelation.textContent = "Human relation: " + timeOfDay.humanRelation;
+  humanRelation.textContent = "" + timeOfDay.humanRelation;
   surfInfoDiv.appendChild(humanRelation);
   // wind
   let currentTimeStamp = Math.floor(Date.now() / 1000); // Current Unix timestamp in seconds
@@ -270,9 +282,16 @@ function printdata(conditions, wind, tides, weather) {
     }
   }
 
+
+  let nextHighOrLowTide = findNextHighOrLowTide(tideData, closestTideData.closestTideIndex + 1);
+  let nextHighOrLowTideContent = nextHighOrLowTide ? `<p>Next ${nextHighOrLowTide.type} Tide Height: ${nextHighOrLowTide.height}</p>` : '';
+
+
   let tideContent = `
+        <h2> Tide </h2>
         <p>Height: ${closestTideData.closestTide.height}</p>
         <p>Tide Status: ${tideStatus}</p>
+        ${nextHighOrLowTideContent}
     `;
 
   document.querySelector(".tide-info").innerHTML = tideContent;
