@@ -163,6 +163,25 @@ const backgroundColorPlugin = {
     });
   },
 };
+
+
+function convertTimestampToReadableHour(timestamp) {
+  console.log(timestamp)
+  const date = new Date(timestamp*1000);
+  console.log(date)
+  const hour = date.getHours();
+  const minutes = date.getMinutes();
+
+  console.log(hour, minutes)
+  // Format the hour and minutes with leading zeros if necessary
+  const formattedHour = hour.toString().padStart(2, '0');
+  const formattedMinutes = minutes.toString().padStart(2, '0');
+
+  const readableHour = `${formattedHour}:${formattedMinutes}`;
+
+  return readableHour;
+}
+
 // Night time end
 // Function to find the closest timestamp to the current time
 function findClosestTimestamp(data, currentTimestamp) {
@@ -284,7 +303,8 @@ function printdata(conditions, wind, tides, weather) {
 
 
   let nextHighOrLowTide = findNextHighOrLowTide(tideData, closestTideData.closestTideIndex + 1);
-  let nextHighOrLowTideContent = nextHighOrLowTide ? `<p>Next ${nextHighOrLowTide.type} Tide Height: ${nextHighOrLowTide.height}</p>` : '';
+  console.log(nextHighOrLowTide);
+  let nextHighOrLowTideContent = nextHighOrLowTide ? `<p>Next ${nextHighOrLowTide.type} Tide Height: ${nextHighOrLowTide.height} at ${convertTimestampToReadableHour(nextHighOrLowTide.timestamp)} </p>` : '';
 
 
   let tideContent = `
