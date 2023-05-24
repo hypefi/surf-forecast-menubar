@@ -5,6 +5,7 @@ const axios = require("axios");
 // const moment = require('moment');
 // const labels = Array.from({length: 7}, (_, i) => moment().month(i).format('MMMM'));
 
+
 // const fs = require('fs');
 const fs = require("fs").promises;
 
@@ -102,6 +103,19 @@ loadData(); // Call the function that loads the data
 
 //Night time
 // Define a helper function to determine whether a timestamp falls within "night" hours
+
+function getH(timestamp) {
+  const date = new Date(timestamp*1000);
+
+ var hours = date.getHours();
+ var minutes = date.getMinutes();
+
+    // Convert minutes to decimal and add to hours
+  var timeDecimal = hours + (minutes / 60);
+
+    return parseFloat(timeDecimal.toFixed(2));
+}
+
 
 function isNightTime(timestamp) {
   // console.log(timestamp)
@@ -339,11 +353,13 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   let wid = wind_data.data.wind;
   // console.log(wid);
   // const date = new Date(timestamp);
+  let sl = weather_data.data.sunlightTimes[0];
 
   // const hour = date.getUTCHours();
   // const hour = date.getHours();
 
-  let timestamps = wd.map((obj) => new Date(obj.timestamp * 1000).getHours());
+  let timestamps = wd.map((obj) => parseFloat(new Date(obj.timestamp * 1000).getHours()));
+  console.log("timestamps chart", timestamps)
   let surf_min = wd.map((obj) => obj.surf.min);
   let surf_max = wd.map((obj) => obj.surf.max);
   let opti_score = wd.map((obj) => obj.surf.optimalScore);
@@ -359,12 +375,27 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   let wind_speed = wid.map((obj) => obj.speed);
   let wind_utcOffset = wid.map((obj) => obj.utcOffset);
   //weather data
+  let sunrise = getH(sl.sunrise);
+  let sunset = getH(sl.sunset);
+  let dusk = getH(sl.dusk);
+  let dawn = getH(sl.dawn);
 
+
+  console.log("dawn" ,dawn, "sunrise", sunrise, "sunset", sunset, "dusk",  dusk)
+  console.log(typeof sunrise);
+  // console.log(typeof )
   // console.log(surf_min);
   // console.log(surf_max);
   // console.log(timestamps);
 
   const Chart = require("chart.js/auto").Chart;
+  const annotationPlugin = require('chartjs-plugin-annotation');
+
+  console.log("Ch1", Chart.registry)
+  console.log("annotation plugin", annotationPlugin);
+  Chart.register(annotationPlugin);
+
+  console.log("Ch2", Chart.registry)
 
   let ctx = document.getElementById("myChart").getContext("2d");
   let ctt = document.getElementById("tideChart").getContext("2d");
@@ -442,6 +473,67 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
       ],
     },
     options: {
+       plugins: {
+      annotation: {
+        annotations: {
+          night1: {
+            // Indicates the type of annotation
+            type: 'box',
+            // xMin: 0,
+            xMax: dawn,
+            // yMin: 0,
+            // yMax: 1,
+            // drawTime: 'beforeDatasetsDraw',
+            // xScaleID: 'x',
+            // yScaleID: 'y',
+            backgroundColor: 'rgba(255, 99, 132, 0.5)'
+          },
+          dawn: {
+            // Indicates the type of annotation
+            type: 'box',
+            xMin: dawn,
+            xMax: sunrise,
+            // yMin: 0,
+            // yMax: 1,
+            // drawTime: 'beforeDatasetsDraw',
+            // xScaleID: 'x',
+            // yScaleID: 'y',
+            backgroundColor: 'rgba(255, 99, 132, 0.25)'
+          },
+          // dusk: {
+          //   // Indicates the type of annotation
+          //   type: 'box',
+          //   xMin: sunset,
+          //   xMax: dusk,
+          //   // yMin: 0.2,
+          //   // yMax: 0.9,
+          //   drawTime: 'beforeDatasetsDraw',
+          //   // xScaleID: 'x',
+          //   // yScaleID: 'y',
+          //   backgroundColor: 'rgba(255, 99, 132, 0.25)'
+          // },
+          // night2: {
+          //   // Indicates the type of annotation
+          //   type: 'box',
+          //   xMin: dusk,
+          //   // xMax: ,
+          //   // yMin: 0.2,
+          //   // yMax: 0.9,
+          //   drawTime: 'beforeDatasetsDraw',
+          //   // xScaleID: 'x',
+          //   // yScaleID: 'y',
+          //   backgroundColor: 'rgba(255, 99, 132, 0.5)'
+          // },
+          // line1: {
+          // type: 'line',
+          // yMin: 1,
+          // yMax: 1,
+          // borderColor: 'rgb(255, 99, 132)',
+          // borderWidth: 2,
+          // }
+        }
+      }
+    },
       scales: {
         x: {
           labels: false,
