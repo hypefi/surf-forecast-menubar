@@ -19,3 +19,4 @@ Customize menubar :
   - Add surfconditions now in the menubar 
 Add surf Alerts : 
   - When the conditions are this and that, send me a notification, or email or whatsapp 
+- add caching to avoid requesting surfline api at every window opening ( do I have cache for the next five days if no, then request api )

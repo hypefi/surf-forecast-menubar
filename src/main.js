@@ -51,7 +51,7 @@ tray = new Tray('./assets/icons/icons8-wave-22.png') // Provide the path to your
     width: 900,
     height: 450,
     show: false,
-    frame: false, // change to true to be able to drag 
+    frame: true, // change to true to be able to drag 
     fullscreenable: false,
     resizable: true,
     transparent: false,

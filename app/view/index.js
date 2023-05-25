@@ -107,8 +107,8 @@ loadData(); // Call the function that loads the data
 function getH(timestamp) {
   const date = new Date(timestamp*1000);
 
- var hours = date.getHours();
- var minutes = date.getMinutes();
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
 
     // Convert minutes to decimal and add to hours
   var timeDecimal = hours + (minutes / 60);
@@ -359,6 +359,8 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   // const hour = date.getHours();
 
   let timestamps = wd.map((obj) => parseFloat(new Date(obj.timestamp * 1000).getHours()));
+  console.log(timestamps[0])
+
   console.log("timestamps chart", timestamps)
   let surf_min = wd.map((obj) => obj.surf.min);
   let surf_max = wd.map((obj) => obj.surf.max);
@@ -442,10 +444,12 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   //   }
   // });
 
+  let tim = timestamps;
+
   let myChart = new Chart(ctx, {
     type: "bar",
     data: {
-      labels: timestamps,
+      labels: tim,
       datasets: [
         {
           label: "surf_min",
@@ -476,17 +480,21 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
        plugins: {
       annotation: {
         annotations: {
-          night1: {
+          n1: {
             // Indicates the type of annotation
             type: 'box',
             // xMin: 0,
             xMax: dawn,
+            xScaleID: 'x',
+
             // yMin: 0,
             // yMax: 1,
             // drawTime: 'beforeDatasetsDraw',
-            // xScaleID: 'x',
+            // xScaleID: 24,
             // yScaleID: 'y',
-            backgroundColor: 'rgba(255, 99, 132, 0.5)'
+          //
+adjustScaleRange: true,
+            backgroundColor: 'rgba(88, 88, 88, 0.4)'
           },
           dawn: {
             // Indicates the type of annotation
@@ -496,39 +504,39 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
             // yMin: 0,
             // yMax: 1,
             // drawTime: 'beforeDatasetsDraw',
-            // xScaleID: 'x',
+            xScaleID: 'x',
             // yScaleID: 'y',
-            backgroundColor: 'rgba(255, 99, 132, 0.25)'
+            backgroundColor: 'rgba(88, 88, 88, 0.2'
           },
-          // dusk: {
-          //   // Indicates the type of annotation
-          //   type: 'box',
-          //   xMin: sunset,
-          //   xMax: dusk,
-          //   // yMin: 0.2,
-          //   // yMax: 0.9,
-          //   drawTime: 'beforeDatasetsDraw',
-          //   // xScaleID: 'x',
-          //   // yScaleID: 'y',
-          //   backgroundColor: 'rgba(255, 99, 132, 0.25)'
-          // },
-          // night2: {
-          //   // Indicates the type of annotation
-          //   type: 'box',
-          //   xMin: dusk,
-          //   // xMax: ,
-          //   // yMin: 0.2,
-          //   // yMax: 0.9,
-          //   drawTime: 'beforeDatasetsDraw',
-          //   // xScaleID: 'x',
-          //   // yScaleID: 'y',
-          //   backgroundColor: 'rgba(255, 99, 132, 0.5)'
-          // },
+          dusk: {
+            // Indicates the type of annotation
+            type: 'box',
+            xMin: sunset,
+            xMax: dusk,
+            // yMin: 0.2,
+            // yMax: 0.9,
+            drawTime: 'beforeDatasetsDraw',
+            xScaleID: 'x',
+            // yScaleID: 'y',
+            backgroundColor: 'rgba(88, 88, 88, 0.2)'
+          },
+          night2: {
+            // Indicates the type of annotation
+            type: 'box',
+            xMin: dusk,
+            // xMax: ,
+            // yMin: 0.2,
+            // yMax: 0.9,
+            drawTime: 'beforeDatasetsDraw',
+            xScaleID: 'x',
+            // yScaleID: 'y',
+            backgroundColor: 'rgba(88, 88, 88, 0.4)'
+          },
           // line1: {
           // type: 'line',
           // yMin: 1,
           // yMax: 1,
-          // borderColor: 'rgb(255, 99, 132)',
+          // borderColor: 'rgb(88, 88, 88)',
           // borderWidth: 2,
           // }
         }
@@ -536,6 +544,12 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
     },
       scales: {
         x: {
+          type: 'linear',
+          min: 0,
+          max: 24,
+          ticks: {
+              stepSize: 3,
+          },
           labels: false,
           beginAtZero: true,
           stacked: true, // This will cause bars to stack
