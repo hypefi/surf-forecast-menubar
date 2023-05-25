@@ -44,10 +44,11 @@ document.getElementById('locate').addEventListener('click', function() {
                                       // let spotName = item.hits.hits[0]._source.name;
                                       let spotId = x._id;
                                       let spotName = x._source.name;
+                                      let spotLocation = x._source.breadCrumbs;
 
                                       // Create a new div element for the spot and add it to the spot list
                                       let newSpotItem = document.createElement('div');
-                                      newSpotItem.textContent = spotName;
+                                      newSpotItem.textContent = "🌊" + spotName + "    " + spotLocation.join(', ');
                                       newSpotItem.classList.add('spot-button');
                                       newSpotItem.addEventListener('click', function() {
                                           console.log('Clicked on spot ID:', spotId);
