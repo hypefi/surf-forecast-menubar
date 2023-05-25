@@ -46,7 +46,7 @@ document.getElementById('locate').addEventListener('click', function() {
                                       let spotName = x._source.name;
 
                                       // Create a new div element for the spot and add it to the spot list
-                                      let newSpotItem = document.createElement('li');
+                                      let newSpotItem = document.createElement('div');
                                       newSpotItem.textContent = spotName;
                                       newSpotItem.classList.add('spot-button');
                                       newSpotItem.addEventListener('click', function() {
