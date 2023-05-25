@@ -9,40 +9,90 @@ const axios = require("axios");
 // const fs = require('fs');
 const fs = require("fs").promises;
 
+
+// Location, spot ID 
+          
+let spotId = "5842041f4e65fad6a7708cfb";
+
+document.getElementById('locate').addEventListener('click', function() {
+    let location = document.getElementById('location').value;
+    let url = `https://services.surfline.com/search/site?q=${location}&querySize=10&suggestionSize=10&newsSearch=true`;
+
+    fetch(url)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data)
+        let spotListDiv = document.getElementById('spot-list');
+        console.log(spotListDiv)
+        try{
+                spotListDiv.innerHTML = ''; // Clear existing spot list
+        }catch{
+                
+        }
+        data.forEach(item => {
+            if (item.hits.hits.length > 0 && item.hits.hits[0]._index === "spots") {
+                let spotId = item.hits.hits[0]._id;
+                let spotName = item.hits.hits[0]._source.name;
+
+                // Create a new div element for the spot and add it to the spot list
+                let newSpotDiv = document.createElement('div');
+                newSpotDiv.textContent = spotName;
+                newSpotDiv.classList.add('spot-button');
+                newSpotDiv.addEventListener('click', function() {
+                    console.log('Clicked on spot ID:', spotId);
+                    // You can add more code here to do something with the spot ID when the div is clicked
+                });
+
+                spotListDiv.appendChild(newSpotDiv);
+            }
+        });
+    })
+    .catch(error => console.error('An error occurred:', error));
+});
+
+
+
+
 // Read the JSON file
+
 
 let data;
 
-async function loadData() {
+async function loadData(spotId) {
   try {
     let wave_jsondata = await getData("wave", {
-      spotId: "5842041f4e65fad6a7708cfb",
+      spotId: spotId,
       days: 1,
       intervalHours: 3,
     });
     let tides_jsondata = await getData("tides", {
-      spotId: "5842041f4e65fad6a7708cfb",
+      spotId: spotId,
       days: 1,
       intervalHours: 3,
     });
     let wind_jsondata = await getData("wind", {
-      spotId: "5842041f4e65fad6a7708cfb",
+      spotId: spotId,
       days: 1,
       intervalHours: 3,
     });
     let weather_jsondata = await getData("weather", {
-      spotId: "5842041f4e65fad6a7708cfb",
+      spotId: spotId,
       days: 1,
       intervalHours: 1,
     });
     let rating_jsondata = await getData("rating", {
-      spotId: "5842041f4e65fad6a7708cfb",
+      spotId: spotId,
       days: 1,
       intervalHours: 3,
     });
 
     let conditions_jsondata = await getData("conditions", {
-      spotId: "5842041f4e65fad6a7708cfb",
+      spotId: spotId,
       days: 1,
       // intervalHours: 3,
     });
@@ -99,7 +149,7 @@ async function getData(type, params) {
   return response.data;
 }
 
-loadData(); // Call the function that loads the data
+// loadData(spotId); // Call the function that loads the data
 
 //Night time
 // Define a helper function to determine whether a timestamp falls within "night" hours
@@ -677,3 +727,5 @@ adjustScaleRange: true,
     // plugins: [backgroundColorPlugin]
   );
 }
+
+
