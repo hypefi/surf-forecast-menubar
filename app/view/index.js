@@ -27,28 +27,35 @@ document.getElementById('locate').addEventListener('click', function() {
     })
     .then(data => {
         console.log(data)
-        let spotListDiv = document.getElementById('spot-list');
-        console.log(spotListDiv)
+        let spotList = document.getElementById('spot-list');
+        console.log(spotList)
         try{
-                spotListDiv.innerHTML = ''; // Clear existing spot list
+                spotList.innerHTML = ''; // Clear existing spot list
         }catch{
                 
         }
         data.forEach(item => {
+            console.log(item)
             if (item.hits.hits.length > 0 && item.hits.hits[0]._index === "spots") {
-                let spotId = item.hits.hits[0]._id;
-                let spotName = item.hits.hits[0]._source.name;
+                console.log(item.hits.hits)
+                let it = item.hits.hits;
+                      it.forEach( x => {
+                                      // let spotId = item.hits.hits[0]._id;
+                                      // let spotName = item.hits.hits[0]._source.name;
+                                      let spotId = x._id;
+                                      let spotName = x._source.name;
 
-                // Create a new div element for the spot and add it to the spot list
-                let newSpotDiv = document.createElement('div');
-                newSpotDiv.textContent = spotName;
-                newSpotDiv.classList.add('spot-button');
-                newSpotDiv.addEventListener('click', function() {
-                    console.log('Clicked on spot ID:', spotId);
-                    // You can add more code here to do something with the spot ID when the div is clicked
-                });
+                                      // Create a new div element for the spot and add it to the spot list
+                                      let newSpotItem = document.createElement('li');
+                                      newSpotItem.textContent = spotName;
+                                      newSpotItem.classList.add('spot-button');
+                                      newSpotItem.addEventListener('click', function() {
+                                          console.log('Clicked on spot ID:', spotId);
+                                          // You can add more code here to do something with the spot ID when the div is clicked
+                                      });
 
-                spotListDiv.appendChild(newSpotDiv);
+                                      spotList.appendChild(newSpotItem);
+                      } )
             }
         });
     })
