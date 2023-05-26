@@ -34,9 +34,13 @@ document.getElementById('locate').addEventListener('click', function() {
         }catch{
                 
         }
+
+        let isSpotFound = false;
+
         data.forEach(item => {
             console.log(item)
             if (item.hits.hits.length > 0 && item.hits.hits[0]._index === "spots") {
+              isSpotFound = true;
                 console.log(item.hits.hits)
                 let it = item.hits.hits;
                       it.forEach( x => {
@@ -46,9 +50,12 @@ document.getElementById('locate').addEventListener('click', function() {
                                       let spotName = x._source.name;
                                       let spotLocation = x._source.breadCrumbs;
 
+                                      let iconImgUrl = "../static/icons8-location-40.png"
+
                                       // Create a new div element for the spot and add it to the spot list
                                       let newSpotItem = document.createElement('div');
-                                      newSpotItem.textContent = "🌊" + spotName + "    " + spotLocation.join(', ');
+                                      // newSpotItem.textContent = "" + spotName + "<img src=" + iconImgUrl + " alt='icon'>" + spotLocation.join(', ');
+                                      newSpotItem.textContent = "" + spotName + "                  " + spotLocation.join(', ');
                                       newSpotItem.classList.add('spot-button');
                                       newSpotItem.addEventListener('click', function() {
                                           console.log('Clicked on spot ID:', spotId);
@@ -57,8 +64,22 @@ document.getElementById('locate').addEventListener('click', function() {
 
                                       spotList.appendChild(newSpotItem);
                       } )
-            }
+                                        }
+                                        // else{
+                                      // let newSpotItem = document.createElement('div');
+
+                                      // newSpotItem.textContent = "No spot found with this name, try another! ";
+                                        // spotList.appendChild(newSpotItem);
+                                        // }
         });
+
+if(!isSpotFound) {
+    let newSpotItem = document.createElement('div');
+    newSpotItem.textContent = "No spot found with this name, try another!";
+    spotList.appendChild(newSpotItem);
+}
+
+
     })
     .catch(error => console.error('An error occurred:', error));
 });
@@ -157,7 +178,7 @@ async function getData(type, params) {
   return response.data;
 }
 
-// loadData(spotId); // Call the function that loads the data
+loadData(spotId); // Call the function that loads the data
 
 //Night time
 // Define a helper function to determine whether a timestamp falls within "night" hours
