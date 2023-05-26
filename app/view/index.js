@@ -11,94 +11,87 @@ const axios = require("axios");
 // const fs = require('fs');
 const fs = require("fs").promises;
 
+// Location, spot ID
 
-// Location, spot ID 
-          
 let spotId = "5842041f4e65fad6a7708cfb";
 let swellChart = null;
+let tideChart = null;
+let windChart = null;
 
-document.getElementById('locate').addEventListener('click', function() {
-    let location = document.getElementById('location').value;
-    let url = `https://services.surfline.com/search/site?q=${location}&querySize=10&suggestionSize=10&newsSearch=true`;
+document.getElementById("locate").addEventListener("click", function () {
+  let location = document.getElementById("location").value;
+  let url = `https://services.surfline.com/search/site?q=${location}&querySize=10&suggestionSize=10&newsSearch=true`;
 
-    fetch(url)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
+  fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
     })
-    .then(data => {
-        console.log(data)
-        let spotList = document.getElementById('spot-list');
-        console.log(spotList)
-        try{
-                spotList.innerHTML = ''; // Clear existing spot list
-        }catch{
-                
+    .then((data) => {
+      console.log(data);
+      let spotList = document.getElementById("spot-list");
+      console.log(spotList);
+      try {
+        spotList.innerHTML = ""; // Clear existing spot list
+      } catch {}
+
+      let isSpotFound = false;
+
+      data.forEach((item) => {
+        console.log(item);
+        if (item.hits.hits.length > 0 && item.hits.hits[0]._index === "spots") {
+          isSpotFound = true;
+          console.log(item.hits.hits);
+          let it = item.hits.hits;
+          it.forEach((x) => {
+            // let spotId = item.hits.hits[0]._id;
+            // let spotName = item.hits.hits[0]._source.name;
+            let spotId = x._id;
+            let spotName = x._source.name;
+            let spotLocation = x._source.breadCrumbs;
+
+            let iconImgUrl = "../static/icons8-location-40.png";
+
+            // Create a new div element for the spot and add it to the spot list
+            let newSpotItem = document.createElement("div");
+            // newSpotItem.textContent = "" + spotName + "<img src=" + iconImgUrl + " alt='icon'>" + spotLocation.join(', ');
+            newSpotItem.textContent =
+              "" + spotName + "                  " + spotLocation.join(", ");
+            newSpotItem.classList.add("spot-button");
+            newSpotItem.addEventListener("click", function () {
+              console.log("Clicked on spot ID:", spotId);
+              // You can add more code here to do something with the spot ID when the div is clicked
+              //change location must be stored in config, to stay even when you quit application
+
+              // store.set('LocationId', spotId);
+              // store.set('LocationName', spotName);
+              // store.set('spotLocation', spotLocation.join(', '));
+              loadData(spotId); // Call the function that loads the data
+            });
+
+            spotList.appendChild(newSpotItem);
+          });
         }
+        // else{
+        // let newSpotItem = document.createElement('div');
 
-        let isSpotFound = false;
+        // newSpotItem.textContent = "No spot found with this name, try another! ";
+        // spotList.appendChild(newSpotItem);
+        // }
+      });
 
-        data.forEach(item => {
-            console.log(item)
-            if (item.hits.hits.length > 0 && item.hits.hits[0]._index === "spots") {
-              isSpotFound = true;
-                console.log(item.hits.hits)
-                let it = item.hits.hits;
-                      it.forEach( x => {
-                                      // let spotId = item.hits.hits[0]._id;
-                                      // let spotName = item.hits.hits[0]._source.name;
-                                      let spotId = x._id;
-                                      let spotName = x._source.name;
-                                      let spotLocation = x._source.breadCrumbs;
-
-                                      let iconImgUrl = "../static/icons8-location-40.png"
-
-                                      // Create a new div element for the spot and add it to the spot list
-                                      let newSpotItem = document.createElement('div');
-                                      // newSpotItem.textContent = "" + spotName + "<img src=" + iconImgUrl + " alt='icon'>" + spotLocation.join(', ');
-                                      newSpotItem.textContent = "" + spotName + "                  " + spotLocation.join(', ');
-                                      newSpotItem.classList.add('spot-button');
-                                      newSpotItem.addEventListener('click', function() {
-                                          console.log('Clicked on spot ID:', spotId);
-                                        // You can add more code here to do something with the spot ID when the div is clicked
-                                        //change location must be stored in config, to stay even when you quit application 
-
-
-                                          // store.set('LocationId', spotId);
-                                          // store.set('LocationName', spotName);
-                                          // store.set('spotLocation', spotLocation.join(', '));
-                                          loadData(spotId); // Call the function that loads the data
-                                      });
-
-                                      spotList.appendChild(newSpotItem);
-                      } )
-                                        }
-                                        // else{
-                                      // let newSpotItem = document.createElement('div');
-
-                                      // newSpotItem.textContent = "No spot found with this name, try another! ";
-                                        // spotList.appendChild(newSpotItem);
-                                        // }
-        });
-
-if(!isSpotFound) {
-    let newSpotItem = document.createElement('div');
-    newSpotItem.textContent = "No spot found with this name, try another!";
-    spotList.appendChild(newSpotItem);
-}
-
-
+      if (!isSpotFound) {
+        let newSpotItem = document.createElement("div");
+        newSpotItem.textContent = "No spot found with this name, try another!";
+        spotList.appendChild(newSpotItem);
+      }
     })
-    .catch(error => console.error('An error occurred:', error));
+    .catch((error) => console.error("An error occurred:", error));
 });
 
-
-
-
 // Read the JSON file
-
 
 let data;
 
@@ -147,11 +140,11 @@ async function loadData(spotId) {
     // tides_data = tides_jsondata.data; // You probably want to parse the JSON data before using it
     // console.log(wave_data);
     console.log(tides_jsondata);
-    console.log({swellChart})
-    if(swellChart == null){
-        update_data = false;
-            }else{
-        update_data = true;
+    console.log({ swellChart });
+    if (swellChart == null) {
+      update_data = false;
+    } else {
+      update_data = true;
     }
 
     // update_data = (swellchart != null);
@@ -159,21 +152,21 @@ async function loadData(spotId) {
 
     //tides
 
-      createCharts(
-        wave_jsondata,
-        tides_jsondata,
-        wind_jsondata,
-        weather_jsondata,
-        rating_jsondata,
-        update_data
-      ); // Call the function that creates the chart after the data is loaded
-      printdata(
-        conditions_jsondata,
-        wind_jsondata,
-        tides_jsondata,
-        weather_jsondata,
-        update_data
-      );
+    createCharts(
+      wave_jsondata,
+      tides_jsondata,
+      wind_jsondata,
+      weather_jsondata,
+      rating_jsondata,
+      update_data
+    ); // Call the function that creates the chart after the data is loaded
+    printdata(
+      conditions_jsondata,
+      wind_jsondata,
+      tides_jsondata,
+      weather_jsondata,
+      update_data
+    );
     //wind
     //weather
   } catch (err) {
@@ -204,17 +197,16 @@ loadData(spotId); // Call the function that loads the data
 // Define a helper function to determine whether a timestamp falls within "night" hours
 
 function getH(timestamp) {
-  const date = new Date(timestamp*1000);
+  const date = new Date(timestamp * 1000);
 
   var hours = date.getHours();
   var minutes = date.getMinutes();
 
-    // Convert minutes to decimal and add to hours
-  var timeDecimal = hours + (minutes / 60);
+  // Convert minutes to decimal and add to hours
+  var timeDecimal = hours + minutes / 60;
 
-    return parseFloat(timeDecimal.toFixed(2));
+  return parseFloat(timeDecimal.toFixed(2));
 }
-
 
 function isNightTime(timestamp) {
   // console.log(timestamp)
@@ -277,18 +269,17 @@ const backgroundColorPlugin = {
   },
 };
 
-
 function convertTimestampToReadableHour(timestamp) {
-  console.log(timestamp)
-  const date = new Date(timestamp*1000);
-  console.log(date)
+  console.log(timestamp);
+  const date = new Date(timestamp * 1000);
+  console.log(date);
   const hour = date.getHours();
   const minutes = date.getMinutes();
 
-  console.log(hour, minutes)
+  console.log(hour, minutes);
   // Format the hour and minutes with leading zeros if necessary
-  const formattedHour = hour.toString().padStart(2, '0');
-  const formattedMinutes = minutes.toString().padStart(2, '0');
+  const formattedHour = hour.toString().padStart(2, "0");
+  const formattedMinutes = minutes.toString().padStart(2, "0");
 
   const readableHour = `${formattedHour}:${formattedMinutes}`;
 
@@ -325,17 +316,15 @@ function findClosestTide(data, currentTimestamp) {
   };
 }
 
-
 function findNextHighOrLowTide(data, startFromIndex) {
-    for(let i = startFromIndex; i < data.length; i++) {
-        // console.log(i)
-        if(data[i].type === 'HIGH' || data[i].type === 'LOW') {
-            return data[i];
-        }
+  for (let i = startFromIndex; i < data.length; i++) {
+    // console.log(i)
+    if (data[i].type === "HIGH" || data[i].type === "LOW") {
+      return data[i];
     }
-    return null;
+  }
+  return null;
 }
-
 
 function printdata(conditions, wind, tides, weather) {
   let cd = conditions.data;
@@ -349,7 +338,7 @@ function printdata(conditions, wind, tides, weather) {
   console.log(wi);
   console.log(cd);
   console.log(tideData);
-  console.log(we)
+  console.log(we);
 
   var today = new Date();
   var currentHour = today.getHours();
@@ -359,6 +348,12 @@ function printdata(conditions, wind, tides, weather) {
 
   // Getting the surf info div
   var surfInfoDiv = document.querySelector(".surf-info");
+
+
+  // Removing all child elements
+  while (surfInfoDiv.firstChild) {
+    surfInfoDiv.removeChild(surfInfoDiv.firstChild);
+  }
 
   // Adding the title
   var title = document.createElement("h2");
@@ -396,15 +391,21 @@ function printdata(conditions, wind, tides, weather) {
 
   let htmlContent = `
         <h2> Wind </h2> 
-        <p>Speed: ${closestWind.speed.toFixed(2)} ${un.windSpeed.toLowerCase()} </p>
+        <p>Speed: ${closestWind.speed.toFixed(
+          2
+        )} ${un.windSpeed.toLowerCase()} </p>
         <p>Direction: ${closestWind.direction}</p>
         <p>Direction Type: ${closestWind.directionType}</p>
-        <p>Gust: ${closestWind.gust.toFixed(2)} ${un.windSpeed.toLowerCase()} </p>
+        <p>Gust: ${closestWind.gust.toFixed(
+          2
+        )} ${un.windSpeed.toLowerCase()} </p>
     `;
   let WeatherContent = `
         <h2> Weather </h2> 
         <p>Condition: ${closestWeather.condition}</p>
-        <p>Temperature: ${closestWeather.temperature.toFixed(1)}${un.temperature} </p>
+        <p>Temperature: ${closestWeather.temperature.toFixed(1)}${
+    un.temperature
+  } </p>
     `;
 
   document.querySelector(".wind-info").innerHTML = htmlContent;
@@ -424,15 +425,24 @@ function printdata(conditions, wind, tides, weather) {
     }
   }
 
-
-  let nextHighOrLowTide = findNextHighOrLowTide(tideData, closestTideData.closestTideIndex + 1);
+  let nextHighOrLowTide = findNextHighOrLowTide(
+    tideData,
+    closestTideData.closestTideIndex + 1
+  );
   console.log(nextHighOrLowTide);
-  let nextHighOrLowTideContent = nextHighOrLowTide ? `<p>Next ${nextHighOrLowTide.type} Tide Height: ${nextHighOrLowTide.height} ${un.waveHeight.toLowerCase()} at ${convertTimestampToReadableHour(nextHighOrLowTide.timestamp)} </p>` : '';
-
+  let nextHighOrLowTideContent = nextHighOrLowTide
+    ? `<p>Next ${nextHighOrLowTide.type} Tide Height: ${
+        nextHighOrLowTide.height
+      } ${un.waveHeight.toLowerCase()} at ${convertTimestampToReadableHour(
+        nextHighOrLowTide.timestamp
+      )} </p>`
+    : "";
 
   let tideContent = `
         <h2> Tide </h2>
-        <p>Height: ${closestTideData.closestTide.height} ${un.tideHeight.toLowerCase()} </p>
+        <p>Height: ${
+          closestTideData.closestTide.height
+        } ${un.tideHeight.toLowerCase()} </p>
         <p>Tide Status: ${tideStatus}</p>
         ${nextHighOrLowTideContent}
     `;
@@ -440,7 +450,14 @@ function printdata(conditions, wind, tides, weather) {
   document.querySelector(".tide-info").innerHTML = tideContent;
 }
 
-function createCharts(wave_data, tide_data, wind_data, weather_data, ratings, update_data) {
+function createCharts(
+  wave_data,
+  tide_data,
+  wind_data,
+  weather_data,
+  ratings,
+  update_data
+) {
   // Preparing your data for the chart
 
   console.log("chart");
@@ -457,10 +474,12 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings, up
   // const hour = date.getUTCHours();
   // const hour = date.getHours();
 
-  let timestamps = wd.map((obj) => parseFloat(new Date(obj.timestamp * 1000).getHours()));
-  console.log(timestamps[0])
+  let timestamps = wd.map((obj) =>
+    parseFloat(new Date(obj.timestamp * 1000).getHours())
+  );
+  console.log(timestamps[0]);
 
-  console.log("timestamps chart", timestamps)
+  console.log("timestamps chart", timestamps);
   let surf_min = wd.map((obj) => obj.surf.min);
   let surf_max = wd.map((obj) => obj.surf.max);
   let opti_score = wd.map((obj) => obj.surf.optimalScore);
@@ -481,8 +500,7 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings, up
   let dusk = getH(sl.dusk);
   let dawn = getH(sl.dawn);
 
-
-  console.log("dawn" ,dawn, "sunrise", sunrise, "sunset", sunset, "dusk",  dusk)
+  console.log("dawn", dawn, "sunrise", sunrise, "sunset", sunset, "dusk", dusk);
   console.log(typeof sunrise);
   // console.log(typeof )
   // console.log(surf_min);
@@ -490,13 +508,13 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings, up
   // console.log(timestamps);
 
   const Chart = require("chart.js/auto").Chart;
-  const annotationPlugin = require('chartjs-plugin-annotation');
+  const annotationPlugin = require("chartjs-plugin-annotation");
 
-  console.log("Ch1", Chart.registry)
+  console.log("Ch1", Chart.registry);
   console.log("annotation plugin", annotationPlugin);
   Chart.register(annotationPlugin);
 
-  console.log("Ch2", Chart.registry)
+  console.log("Ch2", Chart.registry);
 
   let ctx = document.getElementById("myChart").getContext("2d");
   let ctt = document.getElementById("tideChart").getContext("2d");
@@ -544,220 +562,154 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings, up
   // });
 
   let tim = timestamps;
-  
-  console.log(update_data)
-  if(update_data){
-    // Update surf_min dataset
-    swellChart.data.datasets[0].data = surf_min;
 
-    // Update surf_max dataset
+  console.log(update_data);
+  if (update_data) {
+    // Update surf dataset
+    swellChart.data.datasets[0].data = surf_min;
     swellChart.data.datasets[1].data = surf_max;
+    tideChart.data.datasets[0].data = tide_height;
+    windChart.data.datasets[0].data =wind_speed;
+    windChart.data.datasets[1].data =wind_gust;
 
     // Update the chart
     swellChart.update();
-  }else{
-
-  swellChart = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: tim,
-      datasets: [
-        {
-          label: "surf_min",
-          data: surf_min,
-          backgroundColor: colors, // Pass the colors array here
-          borderColor: colors.map((color) => color.replace("0.2", "1")),
-          //backgroundColor: "rgba(75, 192, 192, 0.2)",
-          // cubicInterpolationMode: "monotone",
-          // borderColor: "rgba(75, 192, 192, 1)",
-          pointStyle: false,
-          borderWidth: 2,
-          // tension: 3
-        },
-        {
-          label: "surf_max",
-          data: surf_max,
-          backgroundColor: colors, // Pass the colors array here
-          borderColor: colors.map((color) => color.replace("0.2", "1")),
-          // backgroundColor: "rgba(255, 99, 132, 0.2)",
-          // cubicInterpolationMode: "default",
-          // borderColor: "rgba(100,149,237, 1)",
-          pointStyle: false,
-          borderWidth: 2,
-        },
-      ],
-    },
-    options: {
-       plugins: {
-      annotation: {
-        annotations: {
-          n1: {
-            // Indicates the type of annotation
-            type: 'box',
-            // xMin: 0,
-            xMax: dawn,
-            xScaleID: 'x',
-
-            // yMin: 0,
-            // yMax: 1,
-            // drawTime: 'beforeDatasetsDraw',
-            // xScaleID: 24,
-            // yScaleID: 'y',
-          //
-adjustScaleRange: true,
-            backgroundColor: 'rgba(88, 88, 88, 0.4)'
-          },
-          dawn: {
-            // Indicates the type of annotation
-            type: 'box',
-            xMin: dawn,
-            xMax: sunrise,
-            // yMin: 0,
-            // yMax: 1,
-            // drawTime: 'beforeDatasetsDraw',
-            xScaleID: 'x',
-            // yScaleID: 'y',
-            backgroundColor: 'rgba(88, 88, 88, 0.2'
-          },
-          dusk: {
-            // Indicates the type of annotation
-            type: 'box',
-            xMin: sunset,
-            xMax: dusk,
-            // yMin: 0.2,
-            // yMax: 0.9,
-            drawTime: 'beforeDatasetsDraw',
-            xScaleID: 'x',
-            // yScaleID: 'y',
-            backgroundColor: 'rgba(88, 88, 88, 0.2)'
-          },
-          night2: {
-            // Indicates the type of annotation
-            type: 'box',
-            xMin: dusk,
-            // xMax: ,
-            // yMin: 0.2,
-            // yMax: 0.9,
-            drawTime: 'beforeDatasetsDraw',
-            xScaleID: 'x',
-            // yScaleID: 'y',
-            backgroundColor: 'rgba(88, 88, 88, 0.4)'
-          },
-          // line1: {
-          // type: 'line',
-          // yMin: 1,
-          // yMax: 1,
-          // borderColor: 'rgb(88, 88, 88)',
-          // borderWidth: 2,
-          // }
-        }
-      }
-    },
-      scales: {
-        x: {
-          type: 'linear',
-          min: 0,
-          max: 24,
-          ticks: {
-              stepSize: 3,
-          },
-          labels: false,
-          beginAtZero: true,
-          stacked: true, // This will cause bars to stack
-        },
-        y: {
-          // you can leave the y-axis as is or configure it as needed
-        },
-      },
-    },
-    // plugins: [backgroundColorPlugin]
-  });
-  }
-
-  console.log(swellChart)
-  // Tide Chart
-  let tideChart = new Chart(ctt, {
-    type: "bar",
-    data: {
-      labels: timestamps,
-      datasets: [
-        {
-          label: "tide height",
-          data: tide_height,
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-          cubicInterpolationMode: "monotone",
-          borderColor: "rgba(75, 192, 192, 1)",
-          pointStyle: false,
-          borderWidth: 2,
-          // tension: 3
-        },
-      ],
-    },
-    // options: {
-    //     responsive: true,
-    //     tooltips: {
-    //       mode: 'index', // Display all tooltips when hovering multiple bars
-    //       intersect: false,
-    //       callbacks: {
-    //         title: function(tooltipItems, data) {
-    //           // You can modify this function to return a string related to each bar
-    //           const index = tooltipItems[0].index;
-    //           return data.labels[index];
-    //         },
-    //         label: function(tooltipItems, data) {
-    //           // You can modify this function to return a string related to each bar
-    //           const dataset = data.datasets[tooltipItems.datasetIndex];
-    //           const value = dataset.data[tooltipItems.index];
-    //           return 'Value: ' + value;
-    //         }
-    //       }
-    //     },
-    scales: {
-      x: {
-        display: false, // this will hide the x axis
-      },
-      y: {
-        // you can leave the y-axis as is or configure it as needed
-      },
-    },
-  });
-  // plugins: [backgroundColorPlugin]
-
-  // Wind Chart
-  let windChart = new Chart(
-    ctwi,
-    {
+    tideChart.update();
+    windChart.update();
+          
+  } else {
+    swellChart = new Chart(ctx, {
       type: "bar",
       data: {
-        labels: timestamps,
+        labels: tim,
         datasets: [
           {
-            label: "Wind Speed",
-            data: wind_speed,
-            backgroundColor: "rgba(75, 192, 192, 0.2)",
-            borderColor: "rgba(75, 192, 192, 1)",
+            label: "surf_min",
+            data: surf_min,
+            backgroundColor: colors, // Pass the colors array here
+            borderColor: colors.map((color) => color.replace("0.2", "1")),
+            //backgroundColor: "rgba(75, 192, 192, 0.2)",
+            // cubicInterpolationMode: "monotone",
+            // borderColor: "rgba(75, 192, 192, 1)",
+            pointStyle: false,
             borderWidth: 2,
+            // tension: 3
           },
           {
-            label: "Wind Gust",
-            data: wind_gust,
-            backgroundColor: "rgba(255, 99, 132, 0.2)",
-            borderColor: "rgba(255, 99, 132, 1)",
+            label: "surf_max",
+            data: surf_max,
+            backgroundColor: colors, // Pass the colors array here
+            borderColor: colors.map((color) => color.replace("0.2", "1")),
+            // backgroundColor: "rgba(255, 99, 132, 0.2)",
+            // cubicInterpolationMode: "default",
+            // borderColor: "rgba(100,149,237, 1)",
+            pointStyle: false,
             borderWidth: 2,
           },
         ],
       },
       options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
+        plugins: {
+          annotation: {
+            annotations: {
+              n1: {
+                // Indicates the type of annotation
+                type: "box",
+                // xMin: 0,
+                xMax: dawn,
+                xScaleID: "x",
+
+                // yMin: 0,
+                // yMax: 1,
+                // drawTime: 'beforeDatasetsDraw',
+                // xScaleID: 24,
+                // yScaleID: 'y',
+                //
+                adjustScaleRange: true,
+                backgroundColor: "rgba(88, 88, 88, 0.4)",
+              },
+              dawn: {
+                // Indicates the type of annotation
+                type: "box",
+                xMin: dawn,
+                xMax: sunrise,
+                // yMin: 0,
+                // yMax: 1,
+                // drawTime: 'beforeDatasetsDraw',
+                xScaleID: "x",
+                // yScaleID: 'y',
+                backgroundColor: "rgba(88, 88, 88, 0.2",
+              },
+              dusk: {
+                // Indicates the type of annotation
+                type: "box",
+                xMin: sunset,
+                xMax: dusk,
+                // yMin: 0.2,
+                // yMax: 0.9,
+                drawTime: "beforeDatasetsDraw",
+                xScaleID: "x",
+                // yScaleID: 'y',
+                backgroundColor: "rgba(88, 88, 88, 0.2)",
+              },
+              night2: {
+                // Indicates the type of annotation
+                type: "box",
+                xMin: dusk,
+                // xMax: ,
+                // yMin: 0.2,
+                // yMax: 0.9,
+                drawTime: "beforeDatasetsDraw",
+                xScaleID: "x",
+                // yScaleID: 'y',
+                backgroundColor: "rgba(88, 88, 88, 0.4)",
+              },
+              // line1: {
+              // type: 'line',
+              // yMin: 1,
+              // yMax: 1,
+              // borderColor: 'rgb(88, 88, 88)',
+              // borderWidth: 2,
+              // }
+            },
           },
+        },
+        scales: {
           x: {
+            type: "linear",
+            min: 0,
+            max: 24,
+            ticks: {
+              stepSize: 3,
+            },
+            labels: false,
             beginAtZero: true,
             stacked: true, // This will cause bars to stack
           },
+          y: {
+            // you can leave the y-axis as is or configure it as needed
+          },
         },
+      },
+      // plugins: [backgroundColorPlugin]
+    });
+    // Tide Chart
+    tideChart = new Chart(ctt, {
+      type: "bar",
+      data: {
+        labels: timestamps,
+        datasets: [
+          {
+            label: "tide height",
+            data: tide_height,
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            cubicInterpolationMode: "monotone",
+            borderColor: "rgba(75, 192, 192, 1)",
+            pointStyle: false,
+            borderWidth: 2,
+            // tension: 3
+          },
+        ],
       },
       // options: {
       //     responsive: true,
@@ -778,17 +730,84 @@ adjustScaleRange: true,
       //         }
       //       }
       //     },
-      // scales: {
-      //   x: {
-      //     display: false, // this will hide the x axis
-      //   },
-      //   y: {
-      //     // you can leave the y-axis as is or configure it as needed
-      //   },
-      // },
-    }
+      scales: {
+        x: {
+          display: false, // this will hide the x axis
+        },
+        y: {
+          // you can leave the y-axis as is or configure it as needed
+        },
+      },
+    });
     // plugins: [backgroundColorPlugin]
-  );
+
+    // Wind Chart
+    windChart = new Chart(
+      ctwi,
+      {
+        type: "bar",
+        data: {
+          labels: timestamps,
+          datasets: [
+            {
+              label: "Wind Speed",
+              data: wind_speed,
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
+              borderColor: "rgba(75, 192, 192, 1)",
+              borderWidth: 2,
+            },
+            {
+              label: "Wind Gust",
+              data: wind_gust,
+              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              borderColor: "rgba(255, 99, 132, 1)",
+              borderWidth: 2,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+            x: {
+              beginAtZero: true,
+              stacked: true, // This will cause bars to stack
+            },
+          },
+        },
+        // options: {
+        //     responsive: true,
+        //     tooltips: {
+        //       mode: 'index', // Display all tooltips when hovering multiple bars
+        //       intersect: false,
+        //       callbacks: {
+        //         title: function(tooltipItems, data) {
+        //           // You can modify this function to return a string related to each bar
+        //           const index = tooltipItems[0].index;
+        //           return data.labels[index];
+        //         },
+        //         label: function(tooltipItems, data) {
+        //           // You can modify this function to return a string related to each bar
+        //           const dataset = data.datasets[tooltipItems.datasetIndex];
+        //           const value = dataset.data[tooltipItems.index];
+        //           return 'Value: ' + value;
+        //         }
+        //       }
+        //     },
+        // scales: {
+        //   x: {
+        //     display: false, // this will hide the x axis
+        //   },
+        //   y: {
+        //     // you can leave the y-axis as is or configure it as needed
+        //   },
+        // },
+      }
+      // plugins: [backgroundColorPlugin]
+    );
+  }
+
+  console.log(swellChart);
 }
-
-
