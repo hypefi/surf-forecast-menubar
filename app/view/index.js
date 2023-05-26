@@ -5,9 +5,9 @@ const axios = require("axios");
 // const moment = require('moment');
 // const labels = Array.from({length: 7}, (_, i) => moment().month(i).format('MMMM'));
 
-const Store = require('electron-store');
+// const Store = require('electron-store');
 
-const store = new Store();
+// const store = new Store();
 // const fs = require('fs');
 const fs = require("fs").promises;
 
@@ -15,6 +15,7 @@ const fs = require("fs").promises;
 // Location, spot ID 
           
 let spotId = "5842041f4e65fad6a7708cfb";
+let swellChart = null;
 
 document.getElementById('locate').addEventListener('click', function() {
     let location = document.getElementById('location').value;
@@ -65,9 +66,9 @@ document.getElementById('locate').addEventListener('click', function() {
                                         //change location must be stored in config, to stay even when you quit application 
 
 
-                                          store.set('LocationId', spotId);
-                                          store.set('LocationName', spotName);
-                                          store.set('spotLocation', spotLocation.join(', '));
+                                          // store.set('LocationId', spotId);
+                                          // store.set('LocationName', spotName);
+                                          // store.set('spotLocation', spotLocation.join(', '));
                                           loadData(spotId); // Call the function that loads the data
                                       });
 
@@ -146,23 +147,33 @@ async function loadData(spotId) {
     // tides_data = tides_jsondata.data; // You probably want to parse the JSON data before using it
     // console.log(wave_data);
     console.log(tides_jsondata);
-    createCharts(
-      wave_jsondata,
-      tides_jsondata,
-      wind_jsondata,
-      weather_jsondata,
-      rating_jsondata
-    ); // Call the function that creates the chart after the data is loaded
-    printdata(
-      conditions_jsondata,
-      wind_jsondata,
-      tides_jsondata,
-      weather_jsondata
-    );
+    console.log({swellChart})
+    if(swellChart == null){
+        update_data = false;
+            }else{
+        update_data = true;
+    }
+
+    // update_data = (swellchart != null);
     //swells
 
     //tides
 
+      createCharts(
+        wave_jsondata,
+        tides_jsondata,
+        wind_jsondata,
+        weather_jsondata,
+        rating_jsondata,
+        update_data
+      ); // Call the function that creates the chart after the data is loaded
+      printdata(
+        conditions_jsondata,
+        wind_jsondata,
+        tides_jsondata,
+        weather_jsondata,
+        update_data
+      );
     //wind
     //weather
   } catch (err) {
@@ -429,7 +440,7 @@ function printdata(conditions, wind, tides, weather) {
   document.querySelector(".tide-info").innerHTML = tideContent;
 }
 
-function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
+function createCharts(wave_data, tide_data, wind_data, weather_data, ratings, update_data) {
   // Preparing your data for the chart
 
   console.log("chart");
@@ -533,12 +544,20 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   // });
 
   let tim = timestamps;
+  
+  console.log(update_data)
+  if(update_data){
+    // Update surf_min dataset
+    swellChart.data.datasets[0].data = surf_min;
 
-  // if (myChart != null) {
-  //   myChart.destroy();
-  // }
+    // Update surf_max dataset
+    swellChart.data.datasets[1].data = surf_max;
 
-  let myChart = new Chart(ctx, {
+    // Update the chart
+    swellChart.update();
+  }else{
+
+  swellChart = new Chart(ctx, {
     type: "bar",
     data: {
       labels: tim,
@@ -653,7 +672,9 @@ adjustScaleRange: true,
     },
     // plugins: [backgroundColorPlugin]
   });
+  }
 
+  console.log(swellChart)
   // Tide Chart
   let tideChart = new Chart(ctt, {
     type: "bar",
