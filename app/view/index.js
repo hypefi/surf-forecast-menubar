@@ -5,7 +5,9 @@ const axios = require("axios");
 // const moment = require('moment');
 // const labels = Array.from({length: 7}, (_, i) => moment().month(i).format('MMMM'));
 
+const Store = require('electron-store');
 
+const store = new Store();
 // const fs = require('fs');
 const fs = require("fs").promises;
 
@@ -59,7 +61,14 @@ document.getElementById('locate').addEventListener('click', function() {
                                       newSpotItem.classList.add('spot-button');
                                       newSpotItem.addEventListener('click', function() {
                                           console.log('Clicked on spot ID:', spotId);
-                                          // You can add more code here to do something with the spot ID when the div is clicked
+                                        // You can add more code here to do something with the spot ID when the div is clicked
+                                        //change location must be stored in config, to stay even when you quit application 
+
+
+                                          store.set('LocationId', spotId);
+                                          store.set('LocationName', spotName);
+                                          store.set('spotLocation', spotLocation.join(', '));
+                                          loadData(spotId); // Call the function that loads the data
                                       });
 
                                       spotList.appendChild(newSpotItem);
@@ -524,6 +533,10 @@ function createCharts(wave_data, tide_data, wind_data, weather_data, ratings) {
   // });
 
   let tim = timestamps;
+
+  // if (myChart != null) {
+  //   myChart.destroy();
+  // }
 
   let myChart = new Chart(ctx, {
     type: "bar",
