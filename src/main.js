@@ -82,18 +82,42 @@ app.on('activate', () => {
 
 async function updateTrayIcon(count) {
   console.log("update tray")
-  let image = await Jimp.read(path.join(__dirname, '../assets/icons/icons8-wave-22.png'));
-  let font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
+  // let image = await Jimp.read(path.join(__dirname, '../assets/icons/icons8-wave-22.png'));
+  // let font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
   // console.log(image)
   // console.log(font)
   
-  image.print(font, 0, 0, {
+ let originalImage = await Jimp.read(path.join(__dirname, '../assets/icons/icons8-wave-22.png'));
+  let font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
+
+  // Create a new, wider image
+  let newWidth = originalImage.bitmap.width + 100; // Change '100' to the amount of extra width you need
+  let newHeight = originalImage.bitmap.height;
+  let extendedImage = new Jimp(newWidth, newHeight);
+
+  // Composite the original image onto the new image
+  extendedImage.composite(originalImage, 0, 0);
+
+  // Create a text image to add to the original
+  let textImage = new Jimp(100, 22); // Adjust size as needed
+  textImage.print(font, 0, 0, {
     text: count.toString(),
-    alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+    alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
     alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
-  }, image.bitmap.width, image.bitmap.height);
+  }, textImage.bitmap.width, textImage.bitmap.height);
+
+  // Composite the text image onto the new image, to the right of the original image
+  extendedImage.composite(textImage, originalImage.bitmap.width, 0);
+
+
+
+//   image.print(font, 0, 0, {
+//     text: count.toString(),
+//     alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+//     alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
+//   }, image.bitmap.width, image.bitmap.height);
   
-image.writeAsync('assets/jimpimage.png').then(() => {
+extendedImage.writeAsync('assets/jimpimage.png').then(() => {
     console.log('Image saved!');
 
 const tmpPath = path.join(__dirname, '../assets/jimpimage.png');
