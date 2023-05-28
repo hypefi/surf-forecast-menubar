@@ -69,6 +69,14 @@ document.getElementById("locate").addEventListener("click", function () {
               // store.set('LocationName', spotName);
               // store.set('spotLocation', spotLocation.join(', '));
               loadData(spotId); // Call the function that loads the data
+              //
+              //
+              spotList = document.getElementById("spot-list");
+              console.log(spotList)
+
+              while(spotList.firstChild) {
+                  spotList.removeChild(spotList.firstChild);
+              }
             });
 
             spotList.appendChild(newSpotItem);
