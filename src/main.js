@@ -1,6 +1,10 @@
 const { Menu, Tray, app, BrowserWindow } = require('electron')
 const os = require("os");
 
+const Jimp = require('jimp');
+
+const path = require('path');
+
 const electron = require("electron");
 // const AutoLaunch = require("auto-launch");
 
@@ -19,24 +23,6 @@ const ipc = electron.ipcMain;
 let tray = null
 let win = null 
 
-
-
-
-
-
-
-// function createWindow () {
-//   let win = new BrowserWindow({
-//     width: 800,
-//     height: 600,
-//     webPreferences: {
-//       nodeIntegration: true,
-//     }
-//   })
-
-//   win.loadFile('index.html')
-// }
-
 // app.whenReady().then(createWindow)
 app.whenReady().then(() => {
 tray = new Tray('./assets/icons/icons8-wave-22.png') // Provide the path to your tray icon here
@@ -46,6 +32,12 @@ tray = new Tray('./assets/icons/icons8-wave-22.png') // Provide the path to your
   ])
   tray.setToolTip('My Electron Tray App')
   tray.setContextMenu(contextMenu)
+
+  let count = 0;
+  setInterval(() => {
+    count++;
+    updateTrayIcon(count);
+  }, 10000);
 
   win = new BrowserWindow({
     width: 900,
@@ -84,3 +76,38 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+
+//helper
+
+async function updateTrayIcon(count) {
+  console.log("update tray")
+  let image = await Jimp.read(path.join(__dirname, '../assets/icons/icons8-wave-22.png'));
+  let font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
+  // console.log(image)
+  // console.log(font)
+  
+  image.print(font, 0, 0, {
+    text: count.toString(),
+    alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+    alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
+  }, image.bitmap.width, image.bitmap.height);
+  
+image.writeAsync('assets/jimpimage.png').then(() => {
+    console.log('Image saved!');
+
+const tmpPath = path.join(__dirname, '../assets/jimpimage.png');
+    tray.setImage(tmpPath);
+
+  }).catch(err => {
+    console.error(err);
+  });
+  // console.log()
+  // image.getBuffer(Jimp.MIME_PNG, (err, buffer) => {
+  //   if (err) {
+  //     console.error(err);
+  //   } else {
+  //     tray.setImage(buffer);
+  //   }
+  // });
+}

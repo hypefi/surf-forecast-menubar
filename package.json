@@ -25,7 +25,8 @@
     "chartjs-plugin-annotation": "^3.0.1",
     "electron": "^24.3.0",
     "electron-packager": "^17.1.1",
-    "electron-store": "^8.1.0"
+    "electron-store": "^8.1.0",
+    "jimp": "^0.22.8"
   },
   "devDependencies": {
     "chartjs-adapter-moment": "^1.0.1",
