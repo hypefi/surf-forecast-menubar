@@ -87,8 +87,10 @@ async function updateTrayIcon(count) {
   // console.log(image)
   // console.log(font)
   
- let originalImage = await Jimp.read(path.join(__dirname, '../assets/icons/icons8-wave-22.png'));
-  let font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
+  let font = await Jimp.loadFont(path.join(__dirname, '../assets/fonts/font22.fnt'));
+  let originalImage = await Jimp.read(path.join(__dirname, '../assets/icons/icons8-wave-22.png'));
+
+  // let font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
 
   // Create a new, wider image
   let newWidth = originalImage.bitmap.width + 100; // Change '100' to the amount of extra width you need
