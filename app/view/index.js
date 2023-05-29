@@ -158,7 +158,7 @@ async function loadData(spotId) {
     }
 
     // const someData = 'Hello from the renderer process!';
-    const someData = rating_jsondata;
+    const someData = conditions_jsondata;
     ipcRenderer.send('data-channel', someData);
     // update_data = (swellchart != null);
     //swells
