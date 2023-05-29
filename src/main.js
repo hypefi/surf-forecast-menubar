@@ -7,6 +7,7 @@ const path = require('path');
 
 const electron = require("electron");
 // const AutoLaunch = require("auto-launch");
+const { ipcMain } = require('electron');
 
 // const low = require("lowdb");
 // const FileSync = require("lowdb/adapters/FileSync");
@@ -33,11 +34,6 @@ tray = new Tray('./assets/icons/icons8-wave-22.png') // Provide the path to your
   tray.setToolTip('My Electron Tray App')
   tray.setContextMenu(contextMenu)
 
-  let count = 0;
-  setInterval(() => {
-    count++;
-    updateTrayIcon(count);
-  }, 10000);
 
   win = new BrowserWindow({
     width: 900,
@@ -87,6 +83,8 @@ async function updateTrayIcon(count) {
   // console.log(image)
   // console.log(font)
   // Get data for tray icon : current conditions, tide ↓ or rising ↑ and next hour of low or high  
+  
+  
 
   let originalImage = await Jimp.read(path.join(__dirname, '../assets/icons/icons8-wave-22.png'));
   let font = await Jimp.loadFont(path.join(__dirname, '../assets/fonts/font22.fnt'));
@@ -137,3 +135,14 @@ const tmpPath = path.join(__dirname, '../assets/jimpimage.png');
   //   }
   // });
 }
+
+// com
+ipcMain.on('data-channel', (event, data) => {
+  console.log(data); // Handle the received data
+});
+
+let count = 0;
+setInterval(() => {
+    count++;
+    updateTrayIcon(count);
+}, 10000);

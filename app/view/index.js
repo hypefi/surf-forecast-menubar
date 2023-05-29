@@ -11,6 +11,8 @@ const axios = require("axios");
 // const fs = require('fs');
 const fs = require("fs").promises;
 
+// Renderer process
+const { ipcRenderer } = require('electron');
 // Location, spot ID
 
 let spotId = "5842041f4e65fad6a7708cfb";
@@ -155,6 +157,9 @@ async function loadData(spotId) {
       update_data = true;
     }
 
+    // const someData = 'Hello from the renderer process!';
+    const someData = rating_jsondata;
+    ipcRenderer.send('data-channel', someData);
     // update_data = (swellchart != null);
     //swells
 
@@ -819,3 +824,4 @@ function createCharts(
 
   console.log(swellChart);
 }
+
