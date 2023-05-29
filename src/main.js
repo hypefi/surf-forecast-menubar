@@ -86,10 +86,10 @@ async function updateTrayIcon(count) {
   // let font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
   // console.log(image)
   // console.log(font)
-  
-  let font = await Jimp.loadFont(path.join(__dirname, '../assets/fonts/font22.fnt'));
-  let originalImage = await Jimp.read(path.join(__dirname, '../assets/icons/icons8-wave-22.png'));
+  // Get data for tray icon : current conditions, tide ↓ or rising ↑ and next hour of low or high  
 
+  let originalImage = await Jimp.read(path.join(__dirname, '../assets/icons/icons8-wave-22.png'));
+  let font = await Jimp.loadFont(path.join(__dirname, '../assets/fonts/font22.fnt'));
   // let font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
 
   // Create a new, wider image
