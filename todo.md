@@ -16,12 +16,16 @@
 > - add change location ==> search city ==> curl api, gives you spot IDs, give them to user, click to choose one 
 - add auto locate, with nearby spots
 - add SAT picture with wind direction 
-- add data in the menubar ==> current conditions ( will be customizable )
-Customize menubar :
-  - Add surfconditions now in the menubar 
+> - add data in the menubar ==> current conditions ( will be customizable )
+> Customize menubar :
+  > - Add surfconditions now in the menubar 
 Add surf Alerts : 
   - When the conditions are this and that, send me a notification, or email or whatsapp 
-- add caching to avoid requesting surfline api at every window opening ( do I have cache for the next five days if no, then request api )
+- add caching to avoid requesting surfline api at every window opening ( do I have cache for the next five days if no, then request api ) maybe not needed 
 - add data courtesy of surfline
 
 - store current spot in config, needed 
+- cron to update data on icon 
+- options to save the location data, (may even use it for caching)
+- add auto-update 
+- add give donations when over 
