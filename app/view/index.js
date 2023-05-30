@@ -2,6 +2,14 @@ const { shell } = require("electron");
 const ipc = require("electron").ipcRenderer;
 const remote = require("electron").remote;
 const axios = require("axios");
+
+const os = require('os');
+const path = require('path');
+
+// Getting the home directory
+const homeDir = os.homedir();
+// Construct the path to the database file
+const dbPath = path.join(homeDir, '.surf', 'DB_Store');
 // const moment = require('moment');
 // const labels = Array.from({length: 7}, (_, i) => moment().month(i).format('MMMM'));
 
@@ -14,8 +22,23 @@ const fs = require("fs").promises;
 // Renderer process
 const { ipcRenderer } = require('electron');
 // Location, spot ID
+//
+const { JsonDB , Config } = require('node-json-db')
+// const Config = require('node-json-db/dist/lib/JsonDBConfig').Config;/
 
-let spotId = "5842041f4e65fad6a7708cfb";
+var db = new JsonDB(new Config(dbPath, true, false, '/'));
+
+let spotId;
+
+// let storedSpotId = await db.getData("/spotId");
+let storedSpotId = null;
+console.log(storedSpotId);
+if(storedSpotId){
+spotId = storedSpotId;
+}else{
+//default one
+spotId = "5842041f4e65fad6a7708cfb";}
+
 let swellChart = null;
 let tideChart = null;
 let windChart = null;
@@ -66,7 +89,12 @@ document.getElementById("locate").addEventListener("click", function () {
               console.log("Clicked on spot ID:", spotId);
               // You can add more code here to do something with the spot ID when the div is clicked
               //change location must be stored in config, to stay even when you quit application
-
+              try {
+                db.push('/spotId', spotId);
+                console.log('SpotId stored successfully.');
+              } catch (error) {
+                console.error('Error storing spotId:', error);
+              }
               // store.set('LocationId', spotId);
               // store.set('LocationName', spotName);
               // store.set('spotLocation', spotLocation.join(', '));
