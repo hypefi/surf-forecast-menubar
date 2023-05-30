@@ -105,7 +105,7 @@ async function updateTrayIcon(cdata, tdata) {
   // let font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
 
   // Create a new, wider image
-  let newWidth = originalImage.bitmap.width + 120; // Change '100' to the amount of extra width you need
+  let newWidth = originalImage.bitmap.width + 130; // Change '100' to the amount of extra width you need
   let newHeight = originalImage.bitmap.height;
   let extendedImage = new Jimp(newWidth, newHeight);
 
@@ -113,8 +113,8 @@ async function updateTrayIcon(cdata, tdata) {
   extendedImage.composite(originalImage, 0, 0);
 
   // Create a text image to add to the original
-  let textImage = new Jimp(100, 22); // Adjust size as needed
-  textImage.print(font, 10, -2, {
+  let textImage = new Jimp(130, 22); // Adjust size as needed
+  textImage.print(font, 10, 0, {
     text: icon_m.toString(),
     alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
     alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
