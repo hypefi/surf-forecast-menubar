@@ -87,13 +87,17 @@ async function updateTrayIcon(cdata, tdata) {
   let count = 0;
   // console.log(cdata)
   let conditions = cdata.data.conditions;
-console.log(tdata)
+  console.log(tdata)
 // console.log(conditions)
 // console.log(checkAMorPM())
 // console.log(conditions[0][checkAMorPM()])
   let ch_ = checkAMorPM();
+  let arrow_tide = (tdata.tideStatus == 'Rising') ? "R" : "F";
+  let nexttidehour = tdata.nexttidehour;
+  console.log(arrow_tide)
+
   // console.log(conditions[0][ch_].minHeight, "-" , conditions[0][ch_].maxHeight, "m") ;
-  let icon_m = conditions[0][ch_].minHeight + "-" + conditions[0][ch_].maxHeight + cdata.associated.units.waveHeight.toLowerCase();
+  let icon_m = conditions[0][ch_].minHeight + "-" + conditions[0][ch_].maxHeight + cdata.associated.units.waveHeight.toLowerCase() + ' ' + arrow_tide + ' ' + nexttidehour;
   // console.log(conditions)
   
   let originalImage = await Jimp.read(path.join(__dirname, '../assets/icons/icons8-wave-22.png'));
@@ -101,7 +105,7 @@ console.log(tdata)
   // let font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
 
   // Create a new, wider image
-  let newWidth = originalImage.bitmap.width + 100; // Change '100' to the amount of extra width you need
+  let newWidth = originalImage.bitmap.width + 120; // Change '100' to the amount of extra width you need
   let newHeight = originalImage.bitmap.height;
   let extendedImage = new Jimp(newWidth, newHeight);
 
@@ -148,10 +152,10 @@ const tmpPath = path.join(__dirname, '../assets/jimpimage.png');
 
 // com
 ipcMain.on('data-channel', (event, data) => {
-  console.log(data.conditions_jsondata); // Handle the received data
-  console.log(data.tides_jsondata); // Handle the received data
+  console.log(data.conditions); // Handle the received data
+  console.log(data.tide_data_icon); // Handle the received data
 
-  updateTrayIcon(data.conditions_jsondata, data.tides_jsondata);
+  updateTrayIcon(data.conditions, data.tide_data_icon);
 });
 
 let count = 0;

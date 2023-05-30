@@ -160,7 +160,6 @@ async function loadData(spotId) {
     // const someData = 'Hello from the renderer process!';
     // const someData = conditions_jsondata;
 
-    ipcRenderer.send('data-channel', { conditions_jsondata, tides_jsondata });
     // update_data = (swellchart != null);
     //swells
 
@@ -462,6 +461,12 @@ function printdata(conditions, wind, tides, weather) {
     `;
 
   document.querySelector(".tide-info").innerHTML = tideContent;
+          // send data to icon 
+  console.log({conditions})
+  let tide_data_icon = { 'tideStatus': tideStatus, 'nexttidehour': convertTimestampToReadableHour(nextHighOrLowTide.timestamp) }
+ 
+  ipcRenderer.send('data-channel', { conditions, tide_data_icon });
+
 }
 
 function createCharts(
