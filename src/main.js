@@ -76,7 +76,7 @@ app.on('activate', () => {
 
 //helper
 
-async function updateTrayIcon(cdata) {
+async function updateTrayIcon(cdata, tdata) {
   console.log("update tray")
   // let image = await Jimp.read(path.join(__dirname, '../assets/icons/icons8-wave-22.png'));
   // let font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
@@ -85,13 +85,14 @@ async function updateTrayIcon(cdata) {
   // Get data for tray icon : current conditions, tide ↓ or rising ↑ and next hour of low or high  
   
   let count = 0;
-  console.log(cdata)
+  // console.log(cdata)
   let conditions = cdata.data.conditions;
-console.log(conditions)
-console.log(checkAMorPM())
-console.log(conditions[0][checkAMorPM()])
+console.log(tdata)
+// console.log(conditions)
+// console.log(checkAMorPM())
+// console.log(conditions[0][checkAMorPM()])
   let ch_ = checkAMorPM();
-  console.log(conditions[0][ch_].minHeight, "-" , conditions[0][ch_].maxHeight, "m") ;
+  // console.log(conditions[0][ch_].minHeight, "-" , conditions[0][ch_].maxHeight, "m") ;
   let icon_m = conditions[0][ch_].minHeight + "-" + conditions[0][ch_].maxHeight + cdata.associated.units.waveHeight.toLowerCase();
   // console.log(conditions)
   
@@ -109,7 +110,7 @@ console.log(conditions[0][checkAMorPM()])
 
   // Create a text image to add to the original
   let textImage = new Jimp(100, 22); // Adjust size as needed
-  textImage.print(font, 0, 0, {
+  textImage.print(font, 10, -2, {
     text: icon_m.toString(),
     alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
     alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
@@ -147,9 +148,10 @@ const tmpPath = path.join(__dirname, '../assets/jimpimage.png');
 
 // com
 ipcMain.on('data-channel', (event, data) => {
-  console.log(data); // Handle the received data
+  console.log(data.conditions_jsondata); // Handle the received data
+  console.log(data.tides_jsondata); // Handle the received data
 
-  updateTrayIcon(data);
+  updateTrayIcon(data.conditions_jsondata, data.tides_jsondata);
 });
 
 let count = 0;

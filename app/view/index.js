@@ -158,8 +158,9 @@ async function loadData(spotId) {
     }
 
     // const someData = 'Hello from the renderer process!';
-    const someData = conditions_jsondata;
-    ipcRenderer.send('data-channel', someData);
+    // const someData = conditions_jsondata;
+
+    ipcRenderer.send('data-channel', { conditions_jsondata, tides_jsondata });
     // update_data = (swellchart != null);
     //swells
 
