@@ -45,6 +45,7 @@ storedSpotName = await db.getData("/spotName");
 
 console.log(storedSpotId)
 console.log(storedSpotName)
+document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in " + storedSpotName;
 })();
 
 
@@ -52,6 +53,7 @@ console.log(storedSpotName)
 
 storedSpotId = null;
 storedSpotName = null;
+document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in " + "Bouznika";
 }
 
 // let storedSpotId = null;
@@ -63,12 +65,10 @@ console.log(storedSpotName);
 if(storedSpotId){
 spotId = storedSpotId;
 
-document.getElementById("c_conditions").innerHTML = "Current Conditions" + "in" + spotName;
 }else{
 //default one
 spotId = "5842041f4e65fad6a7708cfb";
  
-document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in " + "Bouznika";
 
 }
 
@@ -124,6 +124,8 @@ document.getElementById("locate").addEventListener("click", function () {
               console.log("Clicked on spot ID:", spotId);
               // You can add more code here to do something with the spot ID when the div is clicked
               //change location must be stored in config, to stay even when you quit application
+              //
+            document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in " + spotName;
               try {
                 db.push('/spotId', spotId);
                 db.push('/spotName', spotName);
