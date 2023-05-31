@@ -52,8 +52,8 @@ tray = new Tray('./assets/icons/icons8-wave-22.png') // Provide the path to your
 // win.loadFile('../app/view/index.html') // Load your application here
 win.loadURL('file:///Users/admin/Desktop/WORK/CODE/2023/surf-forecast/app/view/index.html') // Load your application here
 
-win.webContents.openDevTools();
 
+console.log(win.webContents.isDevToolsOpened());
   win.on('blur', () => {
     if (!win.webContents.isDevToolsOpened()) {
       win.hide()
@@ -148,6 +148,8 @@ const tmpPath = path.join(__dirname, '../assets/jimpimage.png');
   //     tray.setImage(buffer);
   //   }
   // });
+//
+win.webContents.openDevTools();
 }
 
 // com

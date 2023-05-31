@@ -30,14 +30,47 @@ var db = new JsonDB(new Config(dbPath, true, false, '/'));
 
 let spotId;
 
-// let storedSpotId = await db.getData("/spotId");
-let storedSpotId = null;
+// console.log(db)
+
+let storedSpotId;
+let storedSpotName;
+try{
+(async function() {
+console.log("async")
+console.log(db)
+let data = await db.getData("/")
+console.log(data)
+storedSpotId = await db.getData("/spotId");
+storedSpotName = await db.getData("/spotName");
+
+console.log(storedSpotId)
+console.log(storedSpotName)
+})();
+
+
+}catch{
+
+storedSpotId = null;
+storedSpotName = null;
+}
+
+// let storedSpotId = null;
+// let storedSpotName = null;
 console.log(storedSpotId);
+console.log(storedSpotName);
+// let spotName = null;
+
 if(storedSpotId){
 spotId = storedSpotId;
+
+document.getElementById("c_conditions").innerHTML = "Current Conditions" + "in" + spotName;
 }else{
 //default one
-spotId = "5842041f4e65fad6a7708cfb";}
+spotId = "5842041f4e65fad6a7708cfb";
+ 
+document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in " + "Bouznika";
+
+}
 
 let swellChart = null;
 let tideChart = null;
@@ -77,6 +110,8 @@ document.getElementById("locate").addEventListener("click", function () {
             let spotName = x._source.name;
             let spotLocation = x._source.breadCrumbs;
 
+
+
             let iconImgUrl = "../static/icons8-location-40.png";
 
             // Create a new div element for the spot and add it to the spot list
@@ -91,6 +126,7 @@ document.getElementById("locate").addEventListener("click", function () {
               //change location must be stored in config, to stay even when you quit application
               try {
                 db.push('/spotId', spotId);
+                db.push('/spotName', spotName);
                 console.log('SpotId stored successfully.');
               } catch (error) {
                 console.error('Error storing spotId:', error);
