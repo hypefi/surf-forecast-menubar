@@ -8,6 +8,7 @@ const path = require('path');
 const electron = require("electron");
 // const AutoLaunch = require("auto-launch");
 const { ipcMain } = require('electron');
+var cron = require('node-cron');
 
 // const low = require("lowdb");
 // const FileSync = require("lowdb/adapters/FileSync");
@@ -24,6 +25,7 @@ const ipc = electron.ipcMain;
 let tray = null
 let win = null 
 
+let icon_data_store; 
 // app.whenReady().then(createWindow)
 app.whenReady().then(() => {
 tray = new Tray('./assets/icons/icons8-wave-22.png') // Provide the path to your tray icon here
@@ -156,9 +158,33 @@ win.webContents.openDevTools();
 ipcMain.on('data-channel', (event, data) => {
   console.log(data.conditions); // Handle the received data
   console.log(data.tide_data_icon); // Handle the received data
-
+  icon_data_store = {
+    conditions: data.conditions,
+    tide_data_icon: data.tide_data_icon
+  };
+  // icon_data_store = data.conditions
+  // icon_data_store = data.conditions
   updateTrayIcon(data.conditions, data.tide_data_icon);
 });
+
+
+
+cron.schedule('* * * * *', async () => {
+  console.log('running a task every minute');
+   try {
+        console.log('Starting job...');
+
+        // Replace this with your function
+        await updateTrayIcon(icon_data_store.conditions, icon_data_store.tide_data_icon);
+
+
+        console.log('Job completed successfully');
+    } catch (error) {
+        console.error('An error occurred:', error);
+    }
+  console.log('run')
+});
+
 
 let count = 0;
 // setInterval(() => {
