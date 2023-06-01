@@ -25,7 +25,10 @@ const ipc = electron.ipcMain;
 let tray = null
 let win = null 
 
-let icon_data_store; 
+ let icon_data_store = {
+    conditions: null,
+    tide_data_icon: null
+  };
 // app.whenReady().then(createWindow)
 app.whenReady().then(() => {
 tray = new Tray('./assets/icons/icons8-wave-22.png') // Provide the path to your tray icon here
@@ -158,10 +161,9 @@ win.webContents.openDevTools();
 ipcMain.on('data-channel', (event, data) => {
   console.log(data.conditions); // Handle the received data
   console.log(data.tide_data_icon); // Handle the received data
-  icon_data_store = {
-    conditions: data.conditions,
-    tide_data_icon: data.tide_data_icon
-  };
+
+  icon_data_store.conditions =  data.conditions;
+  icon_data_store.tide_data_icon =  data.tide_data_icon
   // icon_data_store = data.conditions
   // icon_data_store = data.conditions
   updateTrayIcon(data.conditions, data.tide_data_icon);
@@ -176,7 +178,7 @@ cron.schedule('* * * * *', async () => {
 
         // Replace this with your function
         await updateTrayIcon(icon_data_store.conditions, icon_data_store.tide_data_icon);
-
+ 
 
         console.log('Job completed successfully');
     } catch (error) {
