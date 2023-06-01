@@ -1,11 +1,12 @@
 const { shell } = require("electron");
-const ipc = require("electron").ipcRenderer;
+// const ipc = require("electron").ipcRenderer;
 const remote = require("electron").remote;
 const axios = require("axios");
 
 const os = require('os');
 const path = require('path');
 
+var cron = require('node-cron');
 // Getting the home directory
 const homeDir = os.homedir();
 // Construct the path to the database file
@@ -51,8 +52,8 @@ document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in 
 
 }catch{
 
-storedSpotId = null;
-storedSpotName = null;
+storedSpotId = null; //change to bouznika spotid 
+storedSpotName = "Bouznika";
 document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in " + "Bouznika";
 }
 
@@ -896,4 +897,23 @@ function createCharts(
 
   console.log(swellChart);
 }
+
+
+cron.schedule('0 * * * *', async () => {
+  console.log('running a task every hour ');
+   try {
+        console.log('Starting job...');
+
+        // Get data f
+        //get data
+        // Replace this with your function
+        loadData(storedSpotId);
+ 
+
+        console.log('Job completed successfully');
+    } catch (error) {
+        console.error('An error occurred:', error);
+    }
+  console.log('run')
+});
 
