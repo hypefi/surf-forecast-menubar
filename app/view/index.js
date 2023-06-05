@@ -851,45 +851,89 @@ function createCharts(
             },
           ],
         },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-            x: {
-              beginAtZero: true,
-              stacked: true, // This will cause bars to stack
+      options: {
+        plugins: {
+          annotation: {
+            annotations: {
+              n1: {
+                // Indicates the type of annotation
+                type: "box",
+                // xMin: 0,
+                xMax: dawn,
+                xScaleID: "x",
+
+                // yMin: 0,
+                // yMax: 1,
+                // drawTime: 'beforeDatasetsDraw',
+                // xScaleID: 24,
+                // yScaleID: 'y',
+                //
+                adjustScaleRange: true,
+                backgroundColor: "rgba(88, 88, 88, 0.4)",
+              },
+              dawn: {
+                // Indicates the type of annotation
+                type: "box",
+                xMin: dawn,
+                xMax: sunrise,
+                // yMin: 0,
+                // yMax: 1,
+                // drawTime: 'beforeDatasetsDraw',
+                xScaleID: "x",
+                // yScaleID: 'y',
+                backgroundColor: "rgba(88, 88, 88, 0.2",
+              },
+              dusk: {
+                // Indicates the type of annotation
+                type: "box",
+                xMin: sunset,
+                xMax: dusk,
+                // yMin: 0.2,
+                // yMax: 0.9,
+                drawTime: "beforeDatasetsDraw",
+                xScaleID: "x",
+                // yScaleID: 'y',
+                backgroundColor: "rgba(88, 88, 88, 0.2)",
+              },
+              night2: {
+                // Indicates the type of annotation
+                type: "box",
+                xMin: dusk,
+                // xMax: ,
+                // yMin: 0.2,
+                // yMax: 0.9,
+                drawTime: "beforeDatasetsDraw",
+                xScaleID: "x",
+                // yScaleID: 'y',
+                backgroundColor: "rgba(88, 88, 88, 0.4)",
+              },
+              // line1: {
+              // type: 'line',
+              // yMin: 1,
+              // yMax: 1,
+              // borderColor: 'rgb(88, 88, 88)',
+              // borderWidth: 2,
+              // }
             },
           },
         },
-        // options: {
-        //     responsive: true,
-        //     tooltips: {
-        //       mode: 'index', // Display all tooltips when hovering multiple bars
-        //       intersect: false,
-        //       callbacks: {
-        //         title: function(tooltipItems, data) {
-        //           // You can modify this function to return a string related to each bar
-        //           const index = tooltipItems[0].index;
-        //           return data.labels[index];
-        //         },
-        //         label: function(tooltipItems, data) {
-        //           // You can modify this function to return a string related to each bar
-        //           const dataset = data.datasets[tooltipItems.datasetIndex];
-        //           const value = dataset.data[tooltipItems.index];
-        //           return 'Value: ' + value;
-        //         }
-        //       }
-        //     },
-        // scales: {
-        //   x: {
-        //     display: false, // this will hide the x axis
-        //   },
-        //   y: {
-        //     // you can leave the y-axis as is or configure it as needed
-        //   },
-        // },
+        scales: {
+          x: {
+            type: "linear",
+            min: 0,
+            max: 24,
+            ticks: {
+              stepSize: 3,
+            },
+            labels: false,
+            beginAtZero: true,
+            stacked: true, // This will cause bars to stack
+          },
+          y: {
+            // you can leave the y-axis as is or configure it as needed
+          },
+        },
+      },
       }
       // plugins: [backgroundColorPlugin]
     );
