@@ -563,6 +563,10 @@ function createCharts(
   let timestamps = wd.map((obj) =>
     parseFloat(new Date(obj.timestamp * 1000).getHours())
   );
+
+  let tide_timestamps = td.map((obj) =>
+    parseFloat(new Date(obj.timestamp * 1000).getHours())
+  );
   console.log(timestamps[0]);
 
   console.log("timestamps chart", timestamps);
@@ -586,6 +590,7 @@ function createCharts(
   let dusk = getH(sl.dusk);
   let dawn = getH(sl.dawn);
 
+  console.log({tide_height})
   console.log("dawn", dawn, "sunrise", sunrise, "sunset", sunset, "dusk", dusk);
   console.log(typeof sunrise);
   // console.log(typeof )
@@ -658,6 +663,7 @@ function createCharts(
     windChart.data.datasets[0].data =wind_speed;
     windChart.data.datasets[1].data =wind_gust;
 
+    console.log({tide_height})
     // Update the chart
     swellChart.update();
     tideChart.update();
@@ -783,7 +789,7 @@ function createCharts(
     tideChart = new Chart(ctt, {
       type: "bar",
       data: {
-        labels: timestamps,
+        labels: tide_timestamps,
         datasets: [
           {
             label: "tide height",
