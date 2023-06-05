@@ -8,7 +8,7 @@ const path = require('path');
 const electron = require("electron");
 // const AutoLaunch = require("auto-launch");
 const { ipcMain } = require('electron');
-var cron = require('node-cron');
+// var cron = require('node-cron');
 
 // const low = require("lowdb");
 // const FileSync = require("lowdb/adapters/FileSync");
@@ -171,21 +171,21 @@ ipcMain.on('data-channel', (event, data) => {
 
 
 
-cron.schedule('* * * * *', async () => {
-  console.log('running a task every minute');
-   try {
-        console.log('Starting job...');
+// cron.schedule('* * * * *', async () => {
+//   console.log('running a task every minute');
+//    try {
+//         console.log('Starting job...');
 
-        // Replace this with your function
-        await updateTrayIcon(icon_data_store.conditions, icon_data_store.tide_data_icon);
+//         // Replace this with your function
+//         await updateTrayIcon(icon_data_store.conditions, icon_data_store.tide_data_icon);
  
 
-        console.log('Job completed successfully');
-    } catch (error) {
-        console.error('An error occurred:', error);
-    }
-  console.log('run')
-});
+//         console.log('Job completed successfully');
+//     } catch (error) {
+//         console.error('An error occurred:', error);
+//     }
+//   console.log('run')
+// });
 
 
 let count = 0;

@@ -10,8 +10,8 @@
 
 ==== todo next
 
-- plot chart for the day +=> chart + date 
-- plot three charts + weather of the day ( all the data you can get )
+> - plot chart for the day +=> chart + date 
+> - plot three charts + weather of the day ( all the data you can get )
 - add arrow to plot next days charts 
 > - add change location ==> search city ==> curl api, gives you spot IDs, give them to user, click to choose one 
 - add auto locate, with nearby spots
@@ -24,8 +24,9 @@ Add surf Alerts :
 - add caching to avoid requesting surfline api at every window opening ( do I have cache for the next five days if no, then request api ) maybe not needed 
 - add data courtesy of surfline
 
-- store current spot in config, needed 
-- cron to update data on icon 
-- options to save the location data, (may even use it for caching)
-- add auto-update 
-- add give donations when over 
+> - store current spot in config, needed 
+> - cron to update data on icon, now every hour (maybe change wave data to data from chart)
+==> need to update also on next HIGH or LOW 
+> - options to save the location data, (may even use it for caching)
+- add auto-update => update software from github releases 
+- add give donations => button 
