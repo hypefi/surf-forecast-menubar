@@ -246,3 +246,31 @@ input:checked + .slider:before {
 .spot-button:hover {
     background-color: #2a75c4;
 }
+
+ /* arrows */ 
+.plot-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.arrow {
+    color: #333;
+    font-size: 2em;
+    user-select: none;
+    cursor: pointer;
+}
+
+.arrow:hover {
+    color: #666;
+}
+
+.left {
+    position: absolute;
+    left: 10px;
+}
+
+.right {
+    position: absolute;
+    right: 10px;
+}
