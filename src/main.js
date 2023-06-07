@@ -39,7 +39,6 @@ tray = new Tray('./assets/icons/icons8-wave-22.png') // Provide the path to your
   tray.setToolTip('My Electron Tray App')
   tray.setContextMenu(contextMenu)
 
-
   win = new BrowserWindow({
     width: 900,
     height: 450,
@@ -55,7 +54,14 @@ tray = new Tray('./assets/icons/icons8-wave-22.png') // Provide the path to your
     }
   })
 // win.loadFile('../app/view/index.html') // Load your application here
+//
+// console.log(win.webContents)
+// win.webContents.openDevTools();
+  setTimeout(() => {
+    win.webContents.openDevTools()
+  }, 2000);  // 2 seconds delay
 win.loadURL('file:///Users/admin/Desktop/WORK/CODE/2023/surf-forecast/app/view/index.html') // Load your application here
+
 
 
 console.log(win.webContents.isDevToolsOpened());

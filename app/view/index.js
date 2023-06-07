@@ -32,6 +32,25 @@ var db = new JsonDB(new Config(dbPath, true, false, '/'));
 let spotId;
 
 // console.log(db)
+// store all 5 days data from first API call 
+let wave_jsondata;
+let tides_jsondata; 
+let wind_jsondata;
+let weather_jsondata; 
+let rating_jsondata;
+let conditions_jsondata; 
+
+let currentIndex = 0;
+
+
+//store temp chart data when clickiing arrow up and down
+let temp_wavejson = wave_jsondata;
+let temp_tidesjson = tides_jsondata;
+let temp_windjson = wind_jsondata;
+let temp_weatherjson = weather_jsondata;
+let temp_ratingjson = rating_jsondata;
+let temp_conditionsjson = conditions_jsondata;
+
 
 let storedSpotId;
 let storedSpotName;
@@ -174,35 +193,35 @@ let data;
 
 async function loadData(spotId) {
   try {
-    let wave_jsondata = await getData("wave", {
+     wave_jsondata = await getData("wave", {
       spotId: spotId,
-      days: 1,
+      days: 5,
       intervalHours: 3,
     });
-    let tides_jsondata = await getData("tides", {
+     tides_jsondata = await getData("tides", {
       spotId: spotId,
-      days: 1,
+      days: 5,
       intervalHours: 3,
     });
-    let wind_jsondata = await getData("wind", {
+     wind_jsondata = await getData("wind", {
       spotId: spotId,
-      days: 1,
+      days: 5,
       intervalHours: 3,
     });
-    let weather_jsondata = await getData("weather", {
+     weather_jsondata = await getData("weather", {
       spotId: spotId,
-      days: 1,
+      days: 5,
       intervalHours: 1,
     });
-    let rating_jsondata = await getData("rating", {
+     rating_jsondata = await getData("rating", {
       spotId: spotId,
-      days: 1,
+      days: 5,
       intervalHours: 3,
     });
 
-    let conditions_jsondata = await getData("conditions", {
+     conditions_jsondata = await getData("conditions", {
       spotId: spotId,
-      days: 1,
+      days: 5,
       // intervalHours: 3,
     });
 
@@ -224,22 +243,62 @@ async function loadData(spotId) {
       update_data = true;
     }
 
-    // const someData = 'Hello from the renderer process!';
-    // const someData = conditions_jsondata;
 
-    // update_data = (swellchart != null);
-    //swells
+    temp_wavejson = wave_jsondata;
+    temp_tidesjson = tides_jsondata;
+    temp_windjson = wind_jsondata;
+    temp_weatherjson = weather_jsondata;
+    temp_ratingjson = rating_jsondata;
+    temp_conditionsjson = conditions_jsondata;
+   // console.log(wave_jsondata.data.wave)
+   //  wave_jsondata.data.wave = wave_jsondata.data.wave.slice(currentIndex*8, (currentIndex+1)*8 );
+   //  console.log(wave_jsondata.data.wave)
+    temp_wavejson.data.wave = wave_jsondata.data.wave.slice(currentIndex*8, (currentIndex+1)*8 );
+    temp_tidesjson.data.tides = tides_jsondata.data.tides.slice(currentIndex*24, (currentIndex+1)*24 );
+    temp_windjson.data.wind = wind_jsondata.data.wind.slice(currentIndex*8, (currentIndex+1)*8 );
+    temp_weatherjson.data.weather = weather_jsondata.data.weather.slice(currentIndex*24, (currentIndex+1)*24 );
+    temp_ratingjson.data.rating = rating_jsondata.data.rating.slice(currentIndex*8, (currentIndex+1)*8 );
+    temp_conditionsjson.data.conditions = conditions_jsondata.data.conditions.slice(currentIndex, currentIndex + 1);
 
-    //tides
+    // tides_jsondata.data.tides = tides_jsondata.data.tides.slice(data.slice(currentIndex*8, (currentIndex+1)*8 ));
+    // wind_jsondata.data.wind = wind_jsondata.data.wind.slice(data.slice(currentIndex*8, (currentIndex+1)*8 ));
+    // weather_jsondata.data.weather = weather_jsondata.data.weather.slice(data.slice(currentIndex*24, (currentIndex+1)*24 ));
+    // rating_jsondata.data.rating = rating_jsondata.data.rating.slice(data.slice(currentIndex*8, (currentIndex+1)*8 ));
+    // conditions_jsondata.data.rating = conditions_jsondata.data.rating.slice(data.slice(currentIndex, currentIndex + 1));
+
+
+    console.log({ temp_wavejson });
+    // console.log({ wind_jsondata });
+    // console.log({ weather_jsondata });
+    // console.log({ tides_jsondata });
+    // console.log({ rating_jsondata });
+    // console.log({ conditions_jsondata });
+
+
 
     createCharts(
-      wave_jsondata,
-      tides_jsondata,
-      wind_jsondata,
-      weather_jsondata,
-      rating_jsondata,
+      temp_wavejson,
+      temp_tidesjson,
+      temp_windjson,
+      temp_weatherjson,
+      temp_ratingjson,
       update_data
     ); // Call the function that creates the chart after the data is loaded
+    // printdata(
+    //   temp_conditionsjson,
+    //   temp_windjson,
+    //   temp_tidesjson,
+    //   temp_weatherjson,
+    //   update_data
+    // );
+    // createCharts(
+    //   wave_jsondata,
+    //   tides_jsondata,
+    //   wind_jsondata,
+    //   weather_jsondata,
+    //   rating_jsondata,
+    //   update_data
+    // ); // Call the function that creates the chart after the data is loaded
     printdata(
       conditions_jsondata,
       wind_jsondata,
@@ -414,11 +473,11 @@ function printdata(conditions, wind, tides, weather) {
   let we = weather.data.weather;
   let tideData = tides.data.tides;
 
-  console.log({ wi });
-  console.log(wi);
-  console.log(cd);
-  console.log(tideData);
-  console.log(we);
+  // console.log({ wi });
+  // console.log(wi);
+  // console.log(cd);
+  // console.log(tideData);
+  // console.log(we);
 
   var today = new Date();
   var currentHour = today.getHours();
@@ -549,11 +608,11 @@ function createCharts(
   console.log("chart");
 
   let wd = wave_data.data.wave;
-  // console.log(wd)
+  console.log(wd)
   let td = tide_data.data.tides;
-  // console.log(td);
+  console.log(td);
   let wid = wind_data.data.wind;
-  // console.log(wid);
+  console.log(wid);
   // const date = new Date(timestamp);
   let sl = weather_data.data.sunlightTimes[0];
 
@@ -642,17 +701,7 @@ function createCharts(
     }
   });
 
-  // var colors = opti_score.map((value) => {
-  //   if (value < 30) {
-  //     return 'rgba(75, 192, 192, 0.2)';  // color for values less than 30
-  //   } else if (value < 70) {
-  //     return 'rgba(255, 99, 132, 0.2)';  // color for values between 30 and 70
-  //   } else {
-  //     return 'rgba(255, 205, 86, 0.2)';  // color for values over 70
-  //   }
-  // });
 
-  let tim = timestamps;
 
   console.log(update_data);
   if (update_data) {
@@ -673,7 +722,7 @@ function createCharts(
     swellChart = new Chart(ctx, {
       type: "bar",
       data: {
-        labels: tim,
+        labels: timestamps,
         datasets: [
           {
             label: "surf_min",
@@ -1024,3 +1073,55 @@ cron.schedule('0 * * * *', async () => {
   console.log('run')
 });
 
+// update charts from arrows to get the next day or previous day
+function updateChart(forward) {
+    // If we're moving forward and there's still data ahead, increment the index
+    if (forward && currentIndex + 5 < 5) {
+        currentIndex++;
+    }
+    // If we're moving backward and there's still data behind, decrement the index
+    else if (!forward && currentIndex > 0) {
+        currentIndex--;
+    }
+
+    console.log(tides_jsondata.data.tides)
+    // Get the new data window and update the chart's data
+    temp_wavejson.data.wave = wave_jsondata.data.wave.slice(currentIndex*8, (currentIndex+1)*8 );
+    temp_tidesjson.data.tides = tides_jsondata.data.tides.slice(currentIndex*24, (currentIndex+1)*24 );
+    temp_windjson.data.wind = wind_jsondata.data.wind.slice(currentIndex*8, (currentIndex+1)*8 );
+    temp_weatherjson.data.weather = weather_jsondata.data.weather.slice(currentIndex*24, (currentIndex+1)*24 );
+    temp_ratingjson.data.rating = rating_jsondata.data.rating.slice(currentIndex*8, (currentIndex+1)*8 );
+    temp_conditionsjson.data.conditions = conditions_jsondata.data.conditions.slice(currentIndex, currentIndex + 1);
+    // update_data = true;
+
+    console.log(temp_tidesjson.data.tides)
+    // console.log(wave_jsondata.data.wave)
+    
+    // wave_jsondata    = windowedData.wave_jsondata    
+    // tides_jsondata   = windowedData.tides_jsondata
+    // wind_jsondata    = windowedData.wind_jsondata
+    // weather_jsondata = windowedData.weather_jsondata
+    // rating_jsondata  = windowedData.rating_jsondata
+
+    createCharts(
+      temp_wavejson,
+      temp_tidesjson,
+      temp_windjson,
+      temp_weatherjson,
+      temp_ratingjson,
+      true
+    ); // Call the function that creates the chart after the data is loaded
+    // printdata(
+    //   temp_conditionsjson,
+    //   temp_windjson,
+    //   temp_tidesjson,
+    //   temp_weatherjson,
+    //   true
+    // );
+}
+
+// Take a slice of data that represents the next 5 days 
+function getDataWindow(data, currentIndex) {
+    // Take a slice of the data that represents the next 5 days.
+    return data.slice(currentIndex*8, currentIndex*8 + 8);
+}
