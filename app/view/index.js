@@ -244,12 +244,13 @@ async function loadData(spotId) {
     }
 
 
-    temp_wavejson = wave_jsondata;
-    temp_tidesjson = tides_jsondata;
-    temp_windjson = wind_jsondata;
-    temp_weatherjson = weather_jsondata;
-    temp_ratingjson = rating_jsondata;
-    temp_conditionsjson = conditions_jsondata;
+    temp_wavejson = JSON.parse(JSON.stringify(wave_jsondata));
+wave_jsondata;
+    temp_tidesjson = JSON.parse(JSON.stringify( tides_jsondata));
+    temp_windjson = JSON.parse(JSON.stringify( wind_jsondata));
+    temp_weatherjson = JSON.parse(JSON.stringify( weather_jsondata));
+    temp_ratingjson = JSON.parse(JSON.stringify( rating_jsondata));
+    temp_conditionsjson = JSON.parse(JSON.stringify( conditions_jsondata));
    // console.log(wave_jsondata.data.wave)
    //  wave_jsondata.data.wave = wave_jsondata.data.wave.slice(currentIndex*8, (currentIndex+1)*8 );
    //  console.log(wave_jsondata.data.wave)
@@ -1076,7 +1077,7 @@ cron.schedule('0 * * * *', async () => {
 // update charts from arrows to get the next day or previous day
 function updateChart(forward) {
     // If we're moving forward and there's still data ahead, increment the index
-    if (forward && currentIndex + 5 < 5) {
+    if (forward && currentIndex < 5) {
         currentIndex++;
     }
     // If we're moving backward and there's still data behind, decrement the index
@@ -1084,7 +1085,19 @@ function updateChart(forward) {
         currentIndex--;
     }
 
-    console.log(tides_jsondata.data.tides)
+
+    temp_wavejson = JSON.parse(JSON.stringify(wave_jsondata));
+wave_jsondata;
+    temp_tidesjson = JSON.parse(JSON.stringify( tides_jsondata));
+    temp_windjson = JSON.parse(JSON.stringify( wind_jsondata));
+    temp_weatherjson = JSON.parse(JSON.stringify( weather_jsondata));
+    temp_ratingjson = JSON.parse(JSON.stringify( rating_jsondata));
+    temp_conditionsjson = JSON.parse(JSON.stringify( conditions_jsondata));
+
+    console.log(wave_jsondata)
+    console.log(temp_wavejson)
+    console.log({currentIndex})
+    // console.log(tides_jsondata.data.tides)
     // Get the new data window and update the chart's data
     temp_wavejson.data.wave = wave_jsondata.data.wave.slice(currentIndex*8, (currentIndex+1)*8 );
     temp_tidesjson.data.tides = tides_jsondata.data.tides.slice(currentIndex*24, (currentIndex+1)*24 );
@@ -1094,7 +1107,7 @@ function updateChart(forward) {
     temp_conditionsjson.data.conditions = conditions_jsondata.data.conditions.slice(currentIndex, currentIndex + 1);
     // update_data = true;
 
-    console.log(temp_tidesjson.data.tides)
+    console.log("debug", temp_wavejson.data.wave)
     // console.log(wave_jsondata.data.wave)
     
     // wave_jsondata    = windowedData.wave_jsondata    
@@ -1125,3 +1138,11 @@ function getDataWindow(data, currentIndex) {
     // Take a slice of the data that represents the next 5 days.
     return data.slice(currentIndex*8, currentIndex*8 + 8);
 }
+
+
+document.getElementById("arrow_left").addEventListener("click", function () {
+          updateChart(false) 
+          })
+document.getElementById("arrow_right").addEventListener("click", function () {
+          updateChart(true) 
+          })
