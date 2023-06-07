@@ -1140,9 +1140,24 @@ function getDataWindow(data, currentIndex) {
 }
 
 
-document.getElementById("arrow_left").addEventListener("click", function () {
-          updateChart(false) 
-          })
-document.getElementById("arrow_right").addEventListener("click", function () {
-          updateChart(true) 
-          })
+
+const left_arrows = document.querySelectorAll('.arrow.left');
+const right_arrows = document.querySelectorAll('.arrow.right');
+
+left_arrows.forEach((button) => {
+  button.addEventListener('click', () => {
+    console.log(`Button ${button.id} was clicked!`);
+    // call your function here
+    updateChart(false) 
+  });
+});
+
+right_arrows.forEach((button) => {
+  button.addEventListener('click', () => {
+    console.log(`Button ${button.id} was clicked!`);
+    // call your function here
+    updateChart(true) 
+  });
+});
+
+
