@@ -1074,7 +1074,7 @@ cron.schedule('0 * * * *', async () => {
 // update charts from arrows to get the next day or previous day
 function updateChart(forward) {
     // If we're moving forward and there's still data ahead, increment the index
-    if (forward && currentIndex < 5) {
+    if (forward && currentIndex < 4) {
         currentIndex++;
     }
     // If we're moving backward and there's still data behind, decrement the index
