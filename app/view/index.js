@@ -55,25 +55,22 @@ let temp_conditionsjson = conditions_jsondata;
 let storedSpotId;
 let storedSpotName;
 try{
-(async function() {
-console.log("async")
-console.log(db)
-let data = await db.getData("/")
-console.log(data)
-storedSpotId = await db.getData("/spotId");
-storedSpotName = await db.getData("/spotName");
+  (async function() {
+  console.log("async")
+  console.log(db)
+  let data = await db.getData("/")
+  console.log(data)
+  storedSpotId = await db.getData("/spotId");
+  storedSpotName = await db.getData("/spotName");
 
-console.log(storedSpotId)
-console.log(storedSpotName)
-document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in " + storedSpotName;
-})();
-
-
+  console.log(storedSpotId)
+  console.log(storedSpotName)
+  document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in " + storedSpotName;
+  })();
 }catch{
-
-storedSpotId = null; //change to bouznika spotid 
-storedSpotName = "Bouznika";
-document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in " + "Bouznika";
+  storedSpotId = null; //change to bouznika spotid 
+  storedSpotName = "Bouznika";
+  document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in " + "Bouznika";
 }
 
 // let storedSpotId = null;
@@ -255,7 +252,7 @@ wave_jsondata;
    //  wave_jsondata.data.wave = wave_jsondata.data.wave.slice(currentIndex*8, (currentIndex+1)*8 );
    //  console.log(wave_jsondata.data.wave)
     temp_wavejson.data.wave = wave_jsondata.data.wave.slice(currentIndex*8, (currentIndex+1)*8 );
-    temp_tidesjson.data.tides = tides_jsondata.data.tides.slice(currentIndex*24, (currentIndex+1)*24 );
+    temp_tidesjson.data.tides = tides_jsondata.data.tides.slice(currentIndex*28, (currentIndex+1)*28 );
     temp_windjson.data.wind = wind_jsondata.data.wind.slice(currentIndex*8, (currentIndex+1)*8 );
     temp_weatherjson.data.weather = weather_jsondata.data.weather.slice(currentIndex*24, (currentIndex+1)*24 );
     temp_ratingjson.data.rating = rating_jsondata.data.rating.slice(currentIndex*8, (currentIndex+1)*8 );
@@ -929,7 +926,7 @@ function createCharts(
             },
             labels: false,
             beginAtZero: true,
-            stacked: true, // This will cause bars to stack
+            stacked: false, // This will cause bars to stack
           },
           y: {
             // you can leave the y-axis as is or configure it as needed
@@ -1085,7 +1082,7 @@ function updateChart(forward) {
         currentIndex--;
     }
 
-
+    //deep copy
     temp_wavejson = JSON.parse(JSON.stringify(wave_jsondata));
 wave_jsondata;
     temp_tidesjson = JSON.parse(JSON.stringify( tides_jsondata));
@@ -1100,7 +1097,7 @@ wave_jsondata;
     // console.log(tides_jsondata.data.tides)
     // Get the new data window and update the chart's data
     temp_wavejson.data.wave = wave_jsondata.data.wave.slice(currentIndex*8, (currentIndex+1)*8 );
-    temp_tidesjson.data.tides = tides_jsondata.data.tides.slice(currentIndex*24, (currentIndex+1)*24 );
+    temp_tidesjson.data.tides = tides_jsondata.data.tides.slice(currentIndex*28, (currentIndex+1)*28 );
     temp_windjson.data.wind = wind_jsondata.data.wind.slice(currentIndex*8, (currentIndex+1)*8 );
     temp_weatherjson.data.weather = weather_jsondata.data.weather.slice(currentIndex*24, (currentIndex+1)*24 );
     temp_ratingjson.data.rating = rating_jsondata.data.rating.slice(currentIndex*8, (currentIndex+1)*8 );
@@ -1133,11 +1130,6 @@ wave_jsondata;
     // );
 }
 
-// Take a slice of data that represents the next 5 days 
-function getDataWindow(data, currentIndex) {
-    // Take a slice of the data that represents the next 5 days.
-    return data.slice(currentIndex*8, currentIndex*8 + 8);
-}
 
 
 
