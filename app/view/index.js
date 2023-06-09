@@ -184,6 +184,129 @@ document.getElementById("locate").addEventListener("click", function () {
     .catch((error) => console.error("An error occurred:", error));
 });
 
+
+
+//Auto-Locate              
+document.getElementById("auto-locate").addEventListener("click", function () {
+    // const { latitude, longitude } = { 34.020882, -6.841650 };
+
+    const { latitude, longitude } = { latitude: 34.020882, longitude: -6.841650 };
+    console.log({latitude, longitude});
+    // if (navigator.geolocation) {
+    //     navigator.geolocation.getCurrentPosition((position) => {
+    //         console.log(position);
+    //         // const { latitude, longitude } = position.coords;
+    //         const { latitude, longitude } = { 34.020882, -6.841650 };
+
+    //         console.log({latitude, longitude});
+    //         // event.sender.send('got-location', { latitude, longitude });
+    //     }, (error) => {
+    //         console.error(error);
+    //         // event.sender.send('got-location', null);
+    //     });
+    // } else {
+    //     // event.sender.send('got-location', null);
+    // }      
+
+    const distance = 50;
+    const rectangle = getRectangleEdges(latitude, longitude, distance);
+
+    console.log(rectangle);
+
+   // let url = `https://services.surfline.com/kbyg/mapview?south=33.91344889764405&west=-6.96533203125&north=34.16124999108587&east=-6.709213256835938`;
+
+   let url = `https://services.surfline.com/kbyg/mapview?south=${rectangle.south}&west=${rectangle.west}&north=${rectangle.north}&east=${rectangle.east}`;
+
+  // let url = `https://services.surfline.com/search/site?q=${location}&querySize=10&suggestionSize=10&newsSearch=true`;
+
+  fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+      //let spotList = document.getElementById("spot-list");
+      //console.log(spotList);
+      //try {
+      //  spotList.innerHTML = ""; // Clear existing spot list
+      //} catch {}
+
+      //let isSpotFound = false;
+
+      //data.forEach((item) => {
+      //  console.log(item);
+      //  if (item.hits.hits.length > 0 && item.hits.hits[0]._index === "spots") {
+      //    isSpotFound = true;
+      //    console.log(item.hits.hits);
+      //    let it = item.hits.hits;
+      //    it.forEach((x) => {
+      //      // let spotId = item.hits.hits[0]._id;
+      //      // let spotName = item.hits.hits[0]._source.name;
+      //      let spotId = x._id;
+      //      let spotName = x._source.name;
+      //      let spotLocation = x._source.breadCrumbs;
+
+
+
+      //      let iconImgUrl = "../static/icons8-location-40.png";
+
+      //      // Create a new div element for the spot and add it to the spot list
+      //      let newSpotItem = document.createElement("div");
+      //      // newSpotItem.textContent = "" + spotName + "<img src=" + iconImgUrl + " alt='icon'>" + spotLocation.join(', ');
+      //      newSpotItem.textContent =
+      //        "" + spotName + "                  " + spotLocation.join(", ");
+      //      newSpotItem.classList.add("spot-button");
+      //      newSpotItem.addEventListener("click", function () {
+      //        console.log("Clicked on spot ID:", spotId);
+      //        // You can add more code here to do something with the spot ID when the div is clicked
+      //        //change location must be stored in config, to stay even when you quit application
+      //        //
+      //      document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in " + spotName;
+      //        try {
+      //          db.push('/spotId', spotId);
+      //          db.push('/spotName', spotName);
+      //          console.log('SpotId stored successfully.');
+      //        } catch (error) {
+      //          console.error('Error storing spotId:', error);
+      //        }
+      //        // store.set('LocationId', spotId);
+      //        // store.set('LocationName', spotName);
+      //        // store.set('spotLocation', spotLocation.join(', '));
+      //        loadData(spotId); // Call the function that loads the data
+      //        //
+      //        //
+      //        spotList = document.getElementById("spot-list");
+      //        console.log(spotList)
+
+      //        while(spotList.firstChild) {
+      //            spotList.removeChild(spotList.firstChild);
+      //        }
+      //      });
+
+      //      spotList.appendChild(newSpotItem);
+      //    });
+      //  }
+      //  // else{
+      //  // let newSpotItem = document.createElement('div');
+
+      //  // newSpotItem.textContent = "No spot found with this name, try another! ";
+      //  // spotList.appendChild(newSpotItem);
+      //  // }
+      //});
+
+      //if (!isSpotFound) {
+      //  let newSpotItem = document.createElement("div");
+      //  newSpotItem.textContent = "No spot found with this name, try another!";
+      //  spotList.appendChild(newSpotItem);
+      //}
+    })
+    .catch((error) => console.error("An error occurred:", error));
+
+});
+
 // Read the JSON file
 
 let data;
@@ -1121,3 +1244,32 @@ right_arrows.forEach((button) => {
 });
 
 
+// Map helpers 
+//
+function toRadians(degrees) {
+  return degrees * (Math.PI / 180);
+}
+
+function toDegrees(radians) {
+  return radians * (180 / Math.PI);
+}
+
+function getRectangleEdges(centerLat, centerLon, distance) {
+  const earthRadiusKm = 6371.0;
+
+  // convert latitude and longitude into radians
+  const centerLatRad = toRadians(centerLat);
+  const centerLonRad = toRadians(centerLon);
+
+  // calculate offsets in radians
+  const latOffset = distance / earthRadiusKm;
+  const lonOffset = distance / (earthRadiusKm * Math.cos(centerLatRad));
+
+  // calculate the edge coordinates
+  const south = toDegrees(centerLatRad - latOffset);
+  const west = toDegrees(centerLonRad - lonOffset);
+  const north = toDegrees(centerLatRad + latOffset);
+  const east = toDegrees(centerLonRad + lonOffset);
+
+  return { south, west, north, east };
+}
