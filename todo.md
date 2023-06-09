@@ -34,3 +34,7 @@ Add surf Alerts :
 > - options to save the location data, (may even use it for caching)
 - add auto-update => update software from github releases 
 - add give donations => button 
+
+add water temp in autolocation url
+add go to spot gps in google maps
+add weather of the day with icons and stuff 

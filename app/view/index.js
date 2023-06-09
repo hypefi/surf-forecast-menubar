@@ -226,82 +226,84 @@ document.getElementById("auto-locate").addEventListener("click", function () {
       }
       return response.json();
     })
-    .then((data) => {
-      console.log(data);
-      //let spotList = document.getElementById("spot-list");
-      //console.log(spotList);
-      //try {
-      //  spotList.innerHTML = ""; // Clear existing spot list
-      //} catch {}
+    .then((r_data) => {
+      console.log(r_data);
+      let spotList = document.getElementById("spot-list");
+      console.log(spotList);
+      try {
+        spotList.innerHTML = ""; // Clear existing spot list
+      } catch {}
 
-      //let isSpotFound = false;
+      let isSpotFound = false;
 
-      //data.forEach((item) => {
-      //  console.log(item);
-      //  if (item.hits.hits.length > 0 && item.hits.hits[0]._index === "spots") {
-      //    isSpotFound = true;
-      //    console.log(item.hits.hits);
-      //    let it = item.hits.hits;
-      //    it.forEach((x) => {
-      //      // let spotId = item.hits.hits[0]._id;
-      //      // let spotName = item.hits.hits[0]._source.name;
-      //      let spotId = x._id;
-      //      let spotName = x._source.name;
-      //      let spotLocation = x._source.breadCrumbs;
+      r_data.data.spots.forEach((item) => {
+        console.log(item);
+        // if (item.length > 0 && item._index === "spots") {
+          isSpotFound = true;
+          console.log(item);
+          // let it = item;
+          // it.forEach((x) => {
+            // let spotId = item.hits.hits[0]._id;
+            // let spotName = item.hits.hits[0]._source.name;
+            let spotId = item._id;
+            let spotName = item.name;
+            let spotConditions = item.conditions;
+            // let spotLocation = x._source.breadCrumbs;
 
 
 
-      //      let iconImgUrl = "../static/icons8-location-40.png";
+            let iconImgUrl = "../static/icons8-location-40.png";
 
-      //      // Create a new div element for the spot and add it to the spot list
-      //      let newSpotItem = document.createElement("div");
-      //      // newSpotItem.textContent = "" + spotName + "<img src=" + iconImgUrl + " alt='icon'>" + spotLocation.join(', ');
-      //      newSpotItem.textContent =
-      //        "" + spotName + "                  " + spotLocation.join(", ");
-      //      newSpotItem.classList.add("spot-button");
-      //      newSpotItem.addEventListener("click", function () {
-      //        console.log("Clicked on spot ID:", spotId);
-      //        // You can add more code here to do something with the spot ID when the div is clicked
-      //        //change location must be stored in config, to stay even when you quit application
-      //        //
-      //      document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in " + spotName;
-      //        try {
-      //          db.push('/spotId', spotId);
-      //          db.push('/spotName', spotName);
-      //          console.log('SpotId stored successfully.');
-      //        } catch (error) {
-      //          console.error('Error storing spotId:', error);
-      //        }
-      //        // store.set('LocationId', spotId);
-      //        // store.set('LocationName', spotName);
-      //        // store.set('spotLocation', spotLocation.join(', '));
-      //        loadData(spotId); // Call the function that loads the data
-      //        //
-      //        //
-      //        spotList = document.getElementById("spot-list");
-      //        console.log(spotList)
+            // Create a new div element for the spot and add it to the spot list
+            let newSpotItem = document.createElement("div");
+            // newSpotItem.textContent = "" + spotName + "<img src=" + iconImgUrl + " alt='icon'>" + spotLocation.join(', ');
+            newSpotItem.textContent =
+              "" + spotName + "                  " ;
+              // + spotLocation.join(", ");
+            newSpotItem.classList.add("spot-button");
+            newSpotItem.addEventListener("click", function () {
+              console.log("Clicked on spot ID:", spotId);
+              // You can add more code here to do something with the spot ID when the div is clicked
+              //change location must be stored in config, to stay even when you quit application
+              //
+            document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in " + spotName;
+              try {
+                db.push('/spotId', spotId);
+                db.push('/spotName', spotName);
+                console.log('SpotId stored successfully.');
+              } catch (error) {
+                console.error('Error storing spotId:', error);
+              }
+              // store.set('LocationId', spotId);
+              // store.set('LocationName', spotName);
+              // store.set('spotLocation', spotLocation.join(', '));
+              loadData(spotId); // Call the function that loads the data
+              //
+              //
+              spotList = document.getElementById("spot-list");
+              console.log(spotList)
 
-      //        while(spotList.firstChild) {
-      //            spotList.removeChild(spotList.firstChild);
-      //        }
-      //      });
+              while(spotList.firstChild) {
+                  spotList.removeChild(spotList.firstChild);
+              }
+            });
 
-      //      spotList.appendChild(newSpotItem);
-      //    });
-      //  }
-      //  // else{
-      //  // let newSpotItem = document.createElement('div');
+            spotList.appendChild(newSpotItem);
+          // });
+        // }
+         // else{
+         // let newSpotItem = document.createElement('div');
 
-      //  // newSpotItem.textContent = "No spot found with this name, try another! ";
-      //  // spotList.appendChild(newSpotItem);
-      //  // }
-      //});
+         // newSpotItem.textContent = "No spot found with this name, try another! ";
+         // spotList.appendChild(newSpotItem);
+         // }
+      });
 
-      //if (!isSpotFound) {
-      //  let newSpotItem = document.createElement("div");
-      //  newSpotItem.textContent = "No spot found with this name, try another!";
-      //  spotList.appendChild(newSpotItem);
-      //}
+      if (!isSpotFound) {
+        let newSpotItem = document.createElement("div");
+        newSpotItem.textContent = "No spot found with this name, try another!";
+        spotList.appendChild(newSpotItem);
+      }
     })
     .catch((error) => console.error("An error occurred:", error));
 
