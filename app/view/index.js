@@ -367,44 +367,6 @@ function isMidnight(timestamp) {
   return hours === 0 && minutes === 0;
 }
 
-// Define the Chart.js plugin
-const backgroundColorPlugin = {
-  id: "backgroundColorPlugin",
-  beforeDraw: (chart) => {
-    const ctx = chart.ctx;
-    const xAxis = chart.scales["x"];
-    const yAxis = chart.scales["y"];
-
-    chart.data.labels.forEach((label, i) => {
-      const x = xAxis.getPixelForTick(i);
-      const nextX = xAxis.getPixelForTick(i + 1) || chart.width; // Use the chart width if there's no next tick
-      const width = nextX - x;
-
-      console.log(
-        "x, yAxis.top, width, yAxis.bottom - yAxis.top",
-        x,
-        yAxis.top,
-        width,
-        yAxis.bottom - yAxis.top
-      );
-      ctx.save();
-      // ctx.fillStyle = isNightTime(label) ? 'grey' : 'white'; // Set fill color based on time
-      // ctx.fillRect(x, yAxis.top, width, yAxis.bottom - yAxis.top);
-
-      // Draw a vertical line at midnight
-      if (isMidnight(label)) {
-        ctx.beginPath();
-        ctx.moveTo(x, yAxis.top);
-        ctx.lineTo(x, yAxis.bottom);
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = "black";
-        ctx.stroke();
-      }
-
-      ctx.restore();
-    });
-  },
-};
 
 function convertTimestampToReadableHour(timestamp) {
   console.log(timestamp);
@@ -463,7 +425,7 @@ function findNextHighOrLowTide(data, startFromIndex) {
   return null;
 }
 
-function printdata(conditions, wind, tides, weather) {
+function printdata(conditions, wind, tides, weather, day_i) {
   let cd = conditions.data;
   let ac = conditions.associated;
   let wi = wind.data.wind;
@@ -830,7 +792,6 @@ function createCharts(
           },
         },
       },
-      // plugins: [backgroundColorPlugin]
     });
     // Tide Chart
     tideChart = new Chart(ctt, {
