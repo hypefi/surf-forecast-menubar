@@ -302,13 +302,14 @@ wave_jsondata;
       wind_jsondata,
       tides_jsondata,
       weather_jsondata,
-      update_data
-    );
-    //wind
-    //weather
-  } catch (err) {
-    console.error(err);
-  }
+      update_data,
+      0
+  );
+  //wind
+  //weather
+} catch (err) {
+  console.error(err);
+}
 }
 
 async function getData(type, params) {
@@ -440,6 +441,11 @@ function printdata(conditions, wind, tides, weather, day_i) {
   // console.log(we);
 
   var today = new Date();
+  today.setDate(today.getDate() + day_i);
+
+  console.log({today});
+
+              
   var currentHour = today.getHours();
 
   var surfInfo = cd.conditions[0]; // Considering data for today is the first element
@@ -1082,13 +1088,14 @@ wave_jsondata;
       temp_ratingjson,
       true
     ); // Call the function that creates the chart after the data is loaded
-    // printdata(
-    //   temp_conditionsjson,
-    //   temp_windjson,
-    //   temp_tidesjson,
-    //   temp_weatherjson,
-    //   true
-    // );
+    printdata(
+      temp_conditionsjson,
+      temp_windjson,
+      temp_tidesjson,
+      temp_weatherjson,
+      true,
+      currentIndex
+    );
 }
 
 
