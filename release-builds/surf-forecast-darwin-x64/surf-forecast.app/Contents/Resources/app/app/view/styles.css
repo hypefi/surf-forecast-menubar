@@ -1,0 +1,276 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e0f7fa;
+    transition: background-color 0.5s;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.title {
+    color: #01579b;
+    text-align: center;
+    margin-bottom: 20px;
+    transition: color 0.5s;
+}
+
+.title:hover {
+    color: #0277bd;
+}
+
+.current-weather {
+    background-color: #4fc3f7;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    transition: background-color 0.5s;
+}
+
+.current-weather:hover {
+    background-color: #29b6f6;
+}
+
+.plot-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.plot {
+    background-color: #81d4fa;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    height: 300px;
+    position: relative;
+    transition: background-color 0.5s, transform 0.5s;
+}
+
+.plot h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    transition: color 0.5s;
+}
+
+.plot:hover {
+    background-color: #4fc3f7;
+    transform: scale(1.02);
+}
+
+.plot h2:hover {
+    /* color: #0277bd; */
+}
+
+
+.location-input {
+    background-color: #81d4fa;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.location-input h2 {
+    margin-right: 20px;
+}
+
+.location-input form {
+    flex-grow: 1;
+    display: flex;
+    gap: 10px;
+}
+
+.location-input input {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+.location-input button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4fc3f7;
+    color: #fff;
+    cursor: pointer;
+}
+
+.location-input button:hover {
+    background-color: #29b6f6;
+}
+
+
+/* toggle switch */
+
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.theme-switch {
+    display: inline-block;
+    height: 24px;
+    position: relative;
+    width: 48px;
+}
+
+.theme-switch input {
+    display:none;
+}
+
+.slider {
+    background-color: #ccc;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+}
+
+.slider:before {
+    background-color: #fff;
+    bottom: 4px;
+    content: "";
+    height: 16px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 16px;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.chart-container {
+    width: 80%;
+    margin: 2em auto;
+}
+
+/* canvas { */
+/*     width: 100% !important; */
+/*     height: auto !important; */
+/* } */
+#wind-plot,
+#tide-plot,
+#swell-plot {
+    width: 100%;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#wind-plot,
+#tide-plot,
+#swell-plot .chart-container {
+    width: 90%;  /* adjust this as needed */
+    height: 70%;  /* adjust this as needed */
+}
+
+/* #swell-plot .chart-container canvas { */
+/*     width: 100% !important; */
+/*     height: 100% !important; */
+/* } */
+
+
+/* card css */ 
+
+.card {
+  display: inline-block;
+  width: calc(33.33% - 10px);
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 10px;
+}
+
+.card h2 {
+  font-weight: bold;
+  color: #000;
+}
+
+.surf-info {
+  width: calc(33.33% - 10px);
+}
+
+.weather-info, 
+.wind-info,
+.tide-info,
+.wetsuit {
+  width: calc(22.22% - 10px);
+}
+
+
+.spot-button {
+    /* display: inline-block; */
+    padding: 10px 20px;
+    margin: 10px 0;
+    background-color: #4285f4;
+    color: white;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.spot-button:hover {
+    background-color: #2a75c4;
+}
+
+ /* arrows */ 
+.plot-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.arrow {
+    color: #333;
+    font-size: 2em;
+    user-select: none;
+    cursor: pointer;
+}
+
+.arrow:hover {
+    color: #666;
+}
+
+.left {
+    position: absolute;
+    left: 10px;
+}
+
+.right {
+    position: absolute;
+    right: 10px;
+}
