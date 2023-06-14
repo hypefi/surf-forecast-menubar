@@ -190,128 +190,106 @@ document.getElementById("locate").addEventListener("click", function () {
 document.getElementById("auto-locate").addEventListener("click", async function () {
     // const { latitude, longitude } = { 34.020882, -6.841650 };
 
-    let url, distance, rectangle;
-    let { latitude, longitude } = { latitude: 34.020882, longitude: -6.841650 };
+    let distance, rectangle;
+    let latitude, longitude;          
+    // let { latitude, longitude } = { latitude: 34.020882, longitude: -6.841650 };
     console.log({latitude, longitude});
 
-    fetch('http://ip-api.com/json')
-      .then(response => response.json())
-      .then(data => {
-        // Access the location details from the response
+    try {
+        const response = await fetch('http://ip-api.com/json');
+        const data = await response.json();
+
         const country = data.country;
         const region = data.regionName;
         const city = data.city;
         const zipCode = data.zip;
-     // Access the latitude and longitude from the response
+
         latitude = data.lat;
         longitude = data.lon;
 
-        // Output the GPS coordinates
         console.log(`Latitude: ${latitude}`);
         console.log(`Longitude: ${longitude}`);
-        // Output the location information
         console.log(`Country: ${country}`);
         console.log(`Region: ${region}`);
         console.log(`City: ${city}`);
         console.log(`ZIP Code: ${zipCode}`);
+        
         distance = 50;
         rectangle = getRectangleEdges(latitude, longitude, distance);
-        console.log(rectangle);
-        url = `https://services.surfline.com/kbyg/mapview?south=${rectangle.south}&west=${rectangle.west}&north=${rectangle.north}&east=${rectangle.east}`;
-      })
-      .catch(error => {
+
+    } catch (error) {
         console.log('Error:', error);
-      });
+    }
 
+    console.log(rectangle);
 
+    let url = `https://services.surfline.com/kbyg/mapview?south=${rectangle.south}&west=${rectangle.west}&north=${rectangle.north}&east=${rectangle.east}`;
 
-  fetch(url)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((r_data) => {
-      console.log(r_data);
-      let spotList = document.getElementById("spot-list");
-      console.log(spotList);
-      try {
-        spotList.innerHTML = ""; // Clear existing spot list
-      } catch {}
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-      let isSpotFound = false;
+        const r_data = await response.json();
 
-      r_data.data.spots.forEach((item) => {
-        console.log(item);
-        // if (item.length > 0 && item._index === "spots") {
-          isSpotFound = true;
-          console.log(item);
-          // let it = item;
-          // it.forEach((x) => {
-            // let spotId = item.hits.hits[0]._id;
-            // let spotName = item.hits.hits[0]._source.name;
+        console.log(r_data);
+        let spotList = document.getElementById("spot-list");
+        console.log(spotList);
+
+        try {
+            spotList.innerHTML = ""; 
+        } catch {}
+
+        let isSpotFound = false;
+
+        r_data.data.spots.forEach((item) => {
+            console.log(item);
+            
+            isSpotFound = true;
+            console.log(item);
             let spotId = item._id;
             let spotName = item.name;
             let spotConditions = item.conditions;
-            // let spotLocation = x._source.breadCrumbs;
-
-
-
+            
             let iconImgUrl = "../static/icons8-location-40.png";
 
-            // Create a new div element for the spot and add it to the spot list
             let newSpotItem = document.createElement("div");
-            // newSpotItem.textContent = "" + spotName + "<img src=" + iconImgUrl + " alt='icon'>" + spotLocation.join(', ');
             newSpotItem.textContent =
-              "" + spotName + "                  " ;
-              // + spotLocation.join(", ");
+                "" + spotName + "                  " ;
             newSpotItem.classList.add("spot-button");
             newSpotItem.addEventListener("click", function () {
-              console.log("Clicked on spot ID:", spotId);
-              // You can add more code here to do something with the spot ID when the div is clicked
-              //change location must be stored in config, to stay even when you quit application
-              //
-            document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in " + spotName;
-              try {
-                db.push('/spotId', spotId);
-                db.push('/spotName', spotName);
-                console.log('SpotId stored successfully.');
-              } catch (error) {
-                console.error('Error storing spotId:', error);
-              }
-              // store.set('LocationId', spotId);
-              // store.set('LocationName', spotName);
-              // store.set('spotLocation', spotLocation.join(', '));
-              loadData(spotId); // Call the function that loads the data
-              //
-              //
-              spotList = document.getElementById("spot-list");
-              console.log(spotList)
+                console.log("Clicked on spot ID:", spotId);
+                document.getElementById("c_conditions").innerHTML = "Current Conditions" + " in " + spotName;
+                try {
+                    db.push('/spotId', spotId);
+                    db.push('/spotName', spotName);
+                    console.log('SpotId stored successfully.');
+                } catch (error) {
+                    console.error('Error storing spotId:', error);
+                }
+                loadData(spotId); 
+                
+                spotList = document.getElementById("spot-list");
+                console.log(spotList)
 
-              while(spotList.firstChild) {
-                  spotList.removeChild(spotList.firstChild);
-              }
+                while(spotList.firstChild) {
+                    spotList.removeChild(spotList.firstChild);
+                }
             });
 
             spotList.appendChild(newSpotItem);
-          // });
-        // }
-         // else{
-         // let newSpotItem = document.createElement('div');
+        });
 
-         // newSpotItem.textContent = "No spot found with this name, try another! ";
-         // spotList.appendChild(newSpotItem);
-         // }
-      });
+        if (!isSpotFound) {
+            let newSpotItem = document.createElement("div");
+            newSpotItem.textContent = "No spot found with this name, try another!";
+            spotList.appendChild(newSpotItem);
+        }
+    } catch (error) {
+        console.error("An error occurred:", error);
+    }
 
-      if (!isSpotFound) {
-        let newSpotItem = document.createElement("div");
-        newSpotItem.textContent = "No spot found with this name, try another!";
-        spotList.appendChild(newSpotItem);
-      }
-    })
-    .catch((error) => console.error("An error occurred:", error));
 
 });
 
