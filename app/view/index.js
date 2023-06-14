@@ -187,37 +187,43 @@ document.getElementById("locate").addEventListener("click", function () {
 
 
 //Auto-Locate              
-document.getElementById("auto-locate").addEventListener("click", function () {
+document.getElementById("auto-locate").addEventListener("click", async function () {
     // const { latitude, longitude } = { 34.020882, -6.841650 };
 
-    const { latitude, longitude } = { latitude: 34.020882, longitude: -6.841650 };
+    let url, distance, rectangle;
+    let { latitude, longitude } = { latitude: 34.020882, longitude: -6.841650 };
     console.log({latitude, longitude});
-    // if (navigator.geolocation) {
-    //     navigator.geolocation.getCurrentPosition((position) => {
-    //         console.log(position);
-    //         // const { latitude, longitude } = position.coords;
-    //         const { latitude, longitude } = { 34.020882, -6.841650 };
 
-    //         console.log({latitude, longitude});
-    //         // event.sender.send('got-location', { latitude, longitude });
-    //     }, (error) => {
-    //         console.error(error);
-    //         // event.sender.send('got-location', null);
-    //     });
-    // } else {
-    //     // event.sender.send('got-location', null);
-    // }      
+    fetch('http://ip-api.com/json')
+      .then(response => response.json())
+      .then(data => {
+        // Access the location details from the response
+        const country = data.country;
+        const region = data.regionName;
+        const city = data.city;
+        const zipCode = data.zip;
+     // Access the latitude and longitude from the response
+        latitude = data.lat;
+        longitude = data.lon;
 
-    const distance = 50;
-    const rectangle = getRectangleEdges(latitude, longitude, distance);
+        // Output the GPS coordinates
+        console.log(`Latitude: ${latitude}`);
+        console.log(`Longitude: ${longitude}`);
+        // Output the location information
+        console.log(`Country: ${country}`);
+        console.log(`Region: ${region}`);
+        console.log(`City: ${city}`);
+        console.log(`ZIP Code: ${zipCode}`);
+        distance = 50;
+        rectangle = getRectangleEdges(latitude, longitude, distance);
+        console.log(rectangle);
+        url = `https://services.surfline.com/kbyg/mapview?south=${rectangle.south}&west=${rectangle.west}&north=${rectangle.north}&east=${rectangle.east}`;
+      })
+      .catch(error => {
+        console.log('Error:', error);
+      });
 
-    console.log(rectangle);
 
-   // let url = `https://services.surfline.com/kbyg/mapview?south=33.91344889764405&west=-6.96533203125&north=34.16124999108587&east=-6.709213256835938`;
-
-   let url = `https://services.surfline.com/kbyg/mapview?south=${rectangle.south}&west=${rectangle.west}&north=${rectangle.north}&east=${rectangle.east}`;
-
-  // let url = `https://services.surfline.com/search/site?q=${location}&querySize=10&suggestionSize=10&newsSearch=true`;
 
   fetch(url)
     .then((response) => {

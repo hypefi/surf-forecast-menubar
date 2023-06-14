@@ -10,6 +10,9 @@ const electron = require("electron");
 const { ipcMain } = require('electron');
 // var cron = require('node-cron');
 
+
+const fetch = require('node-fetch');
+
 // const low = require("lowdb");
 // const FileSync = require("lowdb/adapters/FileSync");
 // const ShortcutManager = require("./components/shortcutManager");
@@ -50,7 +53,9 @@ tray = new Tray(path.join(__dirname, '../assets/icons/icons8-wave-22.png')) // P
     webPreferences: {
       backgroundThrottling: false,
       nodeIntegration: true,
+      webSecurity: false,
       contextIsolation: false,
+      permissions: ['geolocation'],
     }
   })
 // win.loadFile('../app/view/index.html') // Load your application here
@@ -200,6 +205,10 @@ ipcMain.on('data-channel', (event, data) => {
 //   console.log('run')
 // });
 
+// fetch('https://ipinfo.io')
+//     .then(res => res.text()) // expecting a text response
+//     .then(body => console.log(body))
+//     .catch(err => console.error('Error:', err));
 
 let count = 0;
 // setInterval(() => {

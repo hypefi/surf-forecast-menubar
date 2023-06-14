@@ -38,3 +38,5 @@ Add surf Alerts :
 add water temp in autolocation url
 add go to spot gps in google maps
 add weather of the day with icons and stuff 
+
+add day of the week, sunday for example to the date, important 
