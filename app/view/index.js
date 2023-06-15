@@ -560,6 +560,9 @@ function printdata(conditions, wind, tides, weather, day_i) {
   var surfInfo = cd.conditions[0]; // Considering data for today is the first element
   var timeOfDay = currentHour < 12 ? surfInfo.am : surfInfo.pm;
 
+  let cday = getDayOfWeek(surfInfo.timestamp);
+
+  console.log(surfInfo);
   // Getting the surf info div
   var surfInfoDiv = document.querySelector(".surf-info");
 
@@ -571,7 +574,7 @@ function printdata(conditions, wind, tides, weather, day_i) {
 
   // Adding the title
   var title = document.createElement("h2");
-  title.textContent = "Surf Info for " + surfInfo.forecastDay;
+  title.textContent = "Surf Info for " + cday + " " + surfInfo.forecastDay;
   surfInfoDiv.appendChild(title);
 
   // Adding the observation
@@ -1259,3 +1262,19 @@ function getRectangleEdges(centerLat, centerLon, distance) {
 
   return { south, west, north, east };
 }
+
+//Other helpers
+function getDayOfWeek(timestampInSeconds) {
+    // Convert the timestamp from seconds to milliseconds
+    var timestampInMilliseconds = timestampInSeconds * 1000;
+
+    // Convert the timestamp into a Date object
+    var dateObject = new Date(timestampInMilliseconds);
+
+    // Get the day of the week
+    var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var dayOfWeekString = days[dateObject.getDay()];
+
+    return dayOfWeekString;
+}
+
