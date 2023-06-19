@@ -748,6 +748,9 @@ function createCharts(
   let ctt = document.getElementById("tideChart").getContext("2d");
   let ctwi = document.getElementById("windChart").getContext("2d");
 
+  const cur_timestamp =  Math.floor( Date.now() / 1000) ;
+  let now_time = getH(cur_timestamp)
+
   // Wave Chart
 
   // And this is your color array, based on another parameter
@@ -883,13 +886,13 @@ function createCharts(
                 // yScaleID: 'y',
                 backgroundColor: "rgba(88, 88, 88, 0.4)",
               },
-              // line1: {
-              // type: 'line',
-              // yMin: 1,
-              // yMax: 1,
-              // borderColor: 'rgb(88, 88, 88)',
-              // borderWidth: 2,
-              // }
+              line1: {
+              type: 'line',
+              xMin: now_time,
+              xMax: now_time,
+              borderColor: 'rgb(88, 88, 88)',
+              borderWidth: 2,
+              }
             },
           },
         },
@@ -985,13 +988,13 @@ function createCharts(
                 // yScaleID: 'y',
                 backgroundColor: "rgba(88, 88, 88, 0.4)",
               },
-              // line1: {
-              // type: 'line',
-              // yMin: 1,
-              // yMax: 1,
-              // borderColor: 'rgb(88, 88, 88)',
-              // borderWidth: 2,
-              // }
+              line1: {
+              type: 'line',
+              xMin: now_time,
+              xMax: now_time,
+              borderColor: 'rgb(88, 88, 88)',
+              borderWidth: 2,
+              }
             },
           },
         },
@@ -1096,13 +1099,13 @@ function createCharts(
                 // yScaleID: 'y',
                 backgroundColor: "rgba(88, 88, 88, 0.4)",
               },
-              // line1: {
-              // type: 'line',
-              // yMin: 1,
-              // yMax: 1,
-              // borderColor: 'rgb(88, 88, 88)',
-              // borderWidth: 2,
-              // }
+              line1: {
+              type: 'line',
+              xMin: now_time,
+              xMax: now_time,
+              borderColor: 'rgb(88, 88, 88)',
+              borderWidth: 2,
+              }
             },
           },
         },
