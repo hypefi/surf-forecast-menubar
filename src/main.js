@@ -6,47 +6,31 @@ const Jimp = require('jimp');
 const path = require('path');
 
 const electron = require("electron");
-// const AutoLaunch = require("auto-launch");
 const { ipcMain } = require('electron');
-// var cron = require('node-cron');
-
 
 const fetch = require('node-fetch');
 
-// const low = require("lowdb");
-// const FileSync = require("lowdb/adapters/FileSync");
-// const ShortcutManager = require("./components/shortcutManager");
-// const config = require("./config");
 const childProcess = require("child_process");
 
 const { Notification, shell, dialog } = electron;
 
-// const { Parser } = require("json2csv");
 const ipc = electron.ipcMain;
-
 
 let tray = null
 let win = null 
 
- let icon_data_store = {
-    conditions: null,
-    tide_data_icon: null
-  };
-// app.whenReady().then(createWindow)
-app.whenReady().then(() => {
-tray = new Tray(path.join(__dirname, '../assets/icons/icons8-wave-22.png')) // Provide the path to your tray icon here
-  const contextMenu = Menu.buildFromTemplate([
-    { label: 'Open', click: function() { win.show() } },
-    { label: 'Quit', role: 'quit' }
-  ])
-  tray.setToolTip('My Electron Tray App')
-  tray.setContextMenu(contextMenu)
+let icon_data_store = {
+  conditions: null,
+  tide_data_icon: null
+};
 
+function createWindow() {
+  console.log("creating window");
   win = new BrowserWindow({
     width: 900,
     height: 450,
     show: false,
-    frame: true, // change to true to be able to drag 
+    frame: true, 
     fullscreenable: false,
     resizable: true,
     transparent: false,
@@ -58,25 +42,43 @@ tray = new Tray(path.join(__dirname, '../assets/icons/icons8-wave-22.png')) // P
       permissions: ['geolocation'],
     }
   })
-// win.loadFile('../app/view/index.html') // Load your application here
-//
-// console.log(win.webContents)
-// win.webContents.openDevTools();
-  setTimeout(() => {
-    win.webContents.openDevTools()
-  }, 2000);  // 2 seconds delay
-// win.loadURL('file:///Users/admin/Desktop/WORK/CODE/2023/surf-forecast/app/view/index.html') // Load your application here
-// win.loadFile('../app/view/index.html') // Load your application here
-win.loadFile(path.join(__dirname,'../app/view/index.html')) // Load your application here
 
+  win.loadFile(path.join(__dirname,'../app/view/index.html')) 
 
+  // win.on('closed', () => {
+  //   win = null;
+  // });
 
-console.log(win.webContents.isDevToolsOpened());
+  win.on('close', (event) => {
+    if (win) {
+      event.preventDefault();
+      win.hide();
+    }
+  });
+
   win.on('blur', () => {
-    if (!win.webContents.isDevToolsOpened()) {
+    if (win && !win.webContents.isDevToolsOpened()) {
       win.hide()
     }
   })
+
+  setTimeout(() => {
+    if (win) win.webContents.openDevTools()
+  }, 2000);
+}
+
+app.whenReady().then(() => {
+  tray = new Tray(path.join(__dirname, '../assets/icons/icons8-wave-22.png'))
+  const contextMenu = Menu.buildFromTemplate([
+{ label: 'Open', click: function() { 
+console.log("win", win ); 
+if (win) win.show() } },
+    { label: 'Quit', role: 'quit' }
+  ])
+  tray.setToolTip('My Electron Tray App')
+  tray.setContextMenu(contextMenu)
+
+  createWindow();
 })
 
 app.on('window-all-closed', () => {
@@ -85,13 +87,13 @@ app.on('window-all-closed', () => {
   }
 })
 
-// app.on('activate', () => {
-//   console.log('activate_')
-//   if (win === null) {
-//     console.log('create window')
-//     createWindow()
-//   }
-// })
+app.on('activate', () => {
+  console.log('activate_')
+  if (win === null) {
+    console.log('create window')
+    createWindow()
+  }
+})
 
 
 //helper
