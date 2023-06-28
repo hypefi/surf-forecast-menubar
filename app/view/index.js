@@ -607,7 +607,9 @@ function printdata(conditions, wind, tides, weather, day_i) {
   let closestWeather = findClosestTimestamp(we, currentTimeStamp);
 
   let htmlContent = `
-        <h2> Wind </h2> 
+        <h2>
+          <img src="../../assets/texticons/icons8-wind-64.png" alt="" style="width:30px;height:30px;"> Wind
+        </h2>
         <p>Speed: ${closestWind.speed.toFixed(
           2
         )} ${un.windSpeed.toLowerCase()} </p>
@@ -618,7 +620,9 @@ function printdata(conditions, wind, tides, weather, day_i) {
         )} ${un.windSpeed.toLowerCase()} </p>
     `;
   let WeatherContent = `
-        <h2> Weather </h2> 
+        <h2>
+          <img src="../../assets/texticons/icons8-partly-cloudy-day-64.png" alt="" style="width:30px;height:30px;"> Weather
+        </h2>
         <p>Condition: ${closestWeather.condition}</p>
         <p>Temperature: ${closestWeather.temperature.toFixed(1)}${
     un.temperature
@@ -656,7 +660,9 @@ function printdata(conditions, wind, tides, weather, day_i) {
     : "";
 
   let tideContent = `
-        <h2> Tide </h2>
+        <h2>
+          <img src="../../assets/texticons/icons8-sea-waves-64.png" alt="" style="width:30px;height:30px;"> Tide 
+        </h2>
         <p>Height: ${
           closestTideData.closestTide.height
         } ${un.tideHeight.toLowerCase()} </p>
