@@ -255,8 +255,20 @@ document.getElementById("auto-locate").addEventListener("click", async function 
             let iconImgUrl = "../static/icons8-location-40.png";
 
             let newSpotItem = document.createElement("div");
-            newSpotItem.textContent =
-                "" + spotName + "                  " ;
+            // newSpotItem.textContent =
+            //     "" + spotName + "                  " ;
+
+            // Create image element
+            let imageElement = document.createElement("img");
+              imageElement.src = "../../assets/texticons/icons8-surf-64.png"; // set the source of the image
+            imageElement.alt = "Spot image"; // set alt text for the image
+            imageElement.style.width = "30px"; // set width of the image
+            imageElement.style.height = "30px"; // set height of the image
+
+            // Add image and spot name to the div
+            newSpotItem.appendChild(imageElement);
+            newSpotItem.append(" " + spotName);
+
             newSpotItem.classList.add("spot-button");
             newSpotItem.addEventListener("click", function () {
                 console.log("Clicked on spot ID:", spotId);
