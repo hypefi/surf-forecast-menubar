@@ -1,6 +1,6 @@
- one page will be for all the options 
+One page will be for all the options 
 
- in the menu tray, check uncheck 
+In the menu tray, check uncheck 
  - Start with macos start
  - Dock icon
  - location ? 
@@ -9,7 +9,7 @@
  - Notifications (After launch)
  - what to show on the menubar (after launch)
 
-==== todo next
+==== Todo next
 
 > - Slides of charts for the next 5 days, all slides move 
 - Add water temp, swell directions, etc wher to find this info ? 

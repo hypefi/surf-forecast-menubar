@@ -43,8 +43,9 @@ body {
 }
 
 .plot {
-    background-color: #81d4fa;
-    color: #fff;
+    /* background-color: #81d4fa; */
+    background-color: #fff;
+    color: #3c70be;
     padding: 20px;
     border-radius: 10px;
     height: 300px;
@@ -59,7 +60,8 @@ body {
 }
 
 .plot:hover {
-    background-color: #4fc3f7;
+    /* background-color: #4fc3f7; */
+    background-color: #fff;
     transform: scale(1.02);
 }
 
