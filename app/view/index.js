@@ -837,7 +837,7 @@ function createCharts(
           {
             label: "surf_min",
             data: surf_min,
-            backgroundColor: colors, // Pass the colors array here
+            backgroundColor: colors.map((color) => color.replace("0.2", "1")), // Pass the colors array here
             borderColor: colors.map((color) => color.replace("0.2", "1")),
             //backgroundColor: "rgba(75, 192, 192, 0.2)",
             // cubicInterpolationMode: "monotone",
