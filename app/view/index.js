@@ -586,12 +586,23 @@ function printdata(conditions, wind, tides, weather, day_i) {
 
   // Adding the title
   var title = document.createElement("h2");
-  title.textContent = "Surf Info for " + cday + " " + surfInfo.forecastDay;
+
+  // Create image element
+  var imageElement = document.createElement("img");
+              imageElement.src = "../../assets/texticons/icons8-min-waves-55.png"; // set the source of the image
+  imageElement.alt = "Surf image"; // set alt text for the image
+  imageElement.style.width = "30px"; // set width of the image
+  imageElement.style.height = "30px"; // set height of the image
+
+  // Add image to the h2
+  title.appendChild(imageElement);
+
+  title.append(" Surf Info for " + cday + " " + surfInfo.forecastDay);
   surfInfoDiv.appendChild(title);
 
   // Adding the observation
   var observation = document.createElement("p");
-  observation.textContent = "Observation: " + timeOfDay.observation;
+              observation.textContent =  "Observation:" + timeOfDay.observation;
   surfInfoDiv.appendChild(observation);
 
   // Adding the min height
