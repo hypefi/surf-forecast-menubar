@@ -1,2 +1,3 @@
 node_modules/
 release_builds/
+release-builds/surf-forecast-darwin-x64/surf-forecast.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework
