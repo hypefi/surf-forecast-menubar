@@ -707,19 +707,18 @@ function printdata(waves, conditions, wind, tides, weather, day_i) {
         <h2>
           <img src="../../assets/texticons/icons8-sea-waves-64.png" alt="" style="width:30px;height:30px;"> Swell Info
         </h2>
-        <p style="font-weight: bold;">
-        ${
-          closestWave.swells[0].height.toFixed(1)
-        } ${un.tideHeight.toLowerCase()} &nbsp;
-        ${
-         closestWave.swells[0].period
-          } s </p>  
-        <p>${
-          closestWave.swells[1].height.toFixed(1)
-        } ${un.tideHeight.toLowerCase()} &nbsp;
-        ${
-          closestWave.swells[1].period
-        } s </p>
+<div style="font-weight: bold;" class="wrapper">
+    ${closestWave.swells[0].height.toFixed(1)} ${un.tideHeight.toLowerCase()} &nbsp; ${closestWave.swells[0].period} s
+    <div class="wind-arrow">
+        <img src="../../assets/icons/icons8-arrow-64.png" alt="Arrow" style="width:20px;height:20px;">
+    </div>
+</div>  
+<div class="wrapper">
+    ${closestWave.swells[1].height.toFixed(1)} ${un.tideHeight.toLowerCase()} &nbsp; ${closestWave.swells[1].period} s    
+    <div class="wind-arrow">
+        <img src="../../assets/icons/icons8-arrow-64.png" alt="Arrow" style="width:20px;height:20px;">
+    </div>
+</div>
     `;
 
   document.querySelector(".swell-info").innerHTML = swellsContent;
