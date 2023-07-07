@@ -722,6 +722,12 @@ function printdata(waves, conditions, wind, tides, weather, day_i) {
     `;
 
   document.querySelector(".swell-info").innerHTML = swellsContent;
+  let dir1 = closestWave.swells[0].direction+90;
+  let dir2 = closestWave.swells[1].direction+90;
+  console.log(dir1)
+  console.log(dir1-90)
+  document.querySelectorAll('.wind-arrow')[0].style.transform = `rotate(${dir1}deg)`;
+  document.querySelectorAll('.wind-arrow')[1].style.transform = `rotate(${dir2}deg)`;
 
   ipcRenderer.send('data-channel', { conditions, tide_data_icon });
 
