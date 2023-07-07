@@ -702,19 +702,21 @@ function printdata(waves, conditions, wind, tides, weather, day_i) {
   console.log({conditions})
   let tide_data_icon = { 'tideStatus': tideStatus, 'nexttidehour': convertTimestampToReadableHour(nextHighOrLowTide.timestamp) }
  
+  let swell_dir_1 = getCompassDirection(closestWave.swells[0].direction);
+  let swell_dir_2 = getCompassDirection(closestWave.swells[1].direction)
 
   let swellsContent = `
         <h2>
           <img src="../../assets/texticons/icons8-sea-waves-64.png" alt="" style="width:30px;height:30px;"> Swell Info
         </h2>
 <div style="font-weight: bold;" class="wrapper">
-    ${closestWave.swells[0].height.toFixed(1)} ${un.tideHeight.toLowerCase()} &nbsp; ${closestWave.swells[0].period} s
+    ${closestWave.swells[0].height.toFixed(1)} ${un.tideHeight.toLowerCase()} &nbsp; ${closestWave.swells[0].period} s &nbsp; ${closestWave.swells[0].direction.toFixed(0)} &nbsp; ${swell_dir_1}
     <div class="wind-arrow">
         <img src="../../assets/icons/icons8-arrow-64.png" alt="Arrow" style="width:20px;height:20px;">
     </div>
 </div>  
 <div class="wrapper">
-    ${closestWave.swells[1].height.toFixed(1)} ${un.tideHeight.toLowerCase()} &nbsp; ${closestWave.swells[1].period} s    
+    ${closestWave.swells[1].height.toFixed(1)} ${un.tideHeight.toLowerCase()} &nbsp; ${closestWave.swells[1].period} s &nbsp; ${closestWave.swells[1].direction.toFixed(0)} &nbsp; ${swell_dir_2}
     <div class="wind-arrow">
         <img src="../../assets/icons/icons8-arrow-64.png" alt="Arrow" style="width:20px;height:20px;">
     </div>
