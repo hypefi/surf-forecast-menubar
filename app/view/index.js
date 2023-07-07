@@ -707,9 +707,19 @@ function printdata(waves, conditions, wind, tides, weather, day_i) {
         <h2>
           <img src="../../assets/texticons/icons8-sea-waves-64.png" alt="" style="width:30px;height:30px;"> Swell Info
         </h2>
-        <p>Height: ${
-          closestWave.swells[0].height
-        } ${un.tideHeight.toLowerCase()} </p>
+        <p style="font-weight: bold;">
+        ${
+          closestWave.swells[0].height.toFixed(1)
+        } ${un.tideHeight.toLowerCase()} &nbsp;
+        ${
+         closestWave.swells[0].period
+          } s </p>  
+        <p>${
+          closestWave.swells[1].height.toFixed(1)
+        } ${un.tideHeight.toLowerCase()} &nbsp;
+        ${
+          closestWave.swells[1].period
+        } s </p>
     `;
 
   document.querySelector(".swell-info").innerHTML = swellsContent;
@@ -1327,3 +1337,8 @@ function getDayOfWeek(timestampInSeconds) {
     return dayOfWeekString;
 }
 
+function getCompassDirection(degrees) {
+    let compassPoints = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW", "N"];
+    let index = Math.round(degrees / 22.5);
+    return compassPoints[index];
+}
