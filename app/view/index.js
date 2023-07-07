@@ -419,6 +419,7 @@ wave_jsondata;
     //   update_data
     // ); // Call the function that creates the chart after the data is loaded
     printdata(
+      wave_jsondata,
       conditions_jsondata,
       wind_jsondata,
       tides_jsondata,
@@ -547,7 +548,9 @@ function findNextHighOrLowTide(data, startFromIndex) {
   return null;
 }
 
-function printdata(conditions, wind, tides, weather, day_i) {
+function printdata(waves, conditions, wind, tides, weather, day_i) {
+  console.log({waves})
+  let wa = waves.data.wave;
   let cd = conditions.data;
   let ac = conditions.associated;
   let wi = wind.data.wind;
@@ -628,6 +631,7 @@ function printdata(conditions, wind, tides, weather, day_i) {
   let currentTimeStamp = Math.floor(Date.now() / 1000); // Current Unix timestamp in seconds
   let closestWind = findClosestTimestamp(wi, currentTimeStamp);
   let closestWeather = findClosestTimestamp(we, currentTimeStamp);
+  let closestWave = findClosestTimestamp(wa, currentTimeStamp);
 
   let htmlContent = `
         <h2>
@@ -698,6 +702,18 @@ function printdata(conditions, wind, tides, weather, day_i) {
   console.log({conditions})
   let tide_data_icon = { 'tideStatus': tideStatus, 'nexttidehour': convertTimestampToReadableHour(nextHighOrLowTide.timestamp) }
  
+
+  let swellsContent = `
+        <h2>
+          <img src="../../assets/texticons/icons8-sea-waves-64.png" alt="" style="width:30px;height:30px;"> Swell Info
+        </h2>
+        <p>Height: ${
+          closestWave.swells[0].height
+        } ${un.tideHeight.toLowerCase()} </p>
+    `;
+
+  document.querySelector(".swell-info").innerHTML = swellsContent;
+
   ipcRenderer.send('data-channel', { conditions, tide_data_icon });
 
 }
@@ -1233,6 +1249,7 @@ wave_jsondata;
       true
     ); // Call the function that creates the chart after the data is loaded
     printdata(
+      temp_wavejson,
       temp_conditionsjson,
       temp_windjson,
       temp_tidesjson,

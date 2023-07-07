@@ -12,7 +12,7 @@ In the menu tray, check uncheck
 ==== Todo next
 
 > - Slides of charts for the next 5 days, all slides move 
-- Add water temp, swell directions, etc wher to find this info ? 
+- Add water temp, swell directions, period of swell very important, etc 
 - perfect design 
 - add now bar/current time, in charts 
 - add swell in charts 
