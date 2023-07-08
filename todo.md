@@ -12,7 +12,9 @@ In the menu tray, check uncheck
 ==== Todo next
 
 > - Slides of charts for the next 5 days, all slides move 
-- Add water temp, swell directions, period of swell very important, etc 
+- Add water temp, 
+> - swell directions, period of swell very important, etc 
+bug in swell after arrow need to check if the values are correct 
 - perfect design 
 - add now bar/current time, in charts 
 - add swell in charts 

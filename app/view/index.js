@@ -548,8 +548,9 @@ function findNextHighOrLowTide(data, startFromIndex) {
   return null;
 }
 
-function printdata(waves, conditions, wind, tides, weather, day_i) {
+function printdata(waves, conditions, wind, tides, weather, update, day_i) {
   console.log({waves})
+  console.log(day_i)
   let wa = waves.data.wave;
   let cd = conditions.data;
   let ac = conditions.associated;
@@ -565,6 +566,7 @@ function printdata(waves, conditions, wind, tides, weather, day_i) {
   // console.log(we);
 
   var today = new Date();
+  // console.log(today)
   today.setDate(today.getDate() + day_i);
 
   console.log({today});
@@ -628,10 +630,17 @@ function printdata(waves, conditions, wind, tides, weather, day_i) {
   humanRelation.textContent = "" + timeOfDay.humanRelation;
   surfInfoDiv.appendChild(humanRelation);
   // wind
-  let currentTimeStamp = Math.floor(Date.now() / 1000); // Current Unix timestamp in seconds
+  // let currentTimeStamp = Math.floor(Date.now() / 1000); // Current Unix timestamp in seconds
+
+  let currentTimeStamp = Math.floor(today.getTime() / 1000); // convert to Unix timestamp in seconds
+  // console.log(Date.now())
+  // console.log(currentTimeStamp)
   let closestWind = findClosestTimestamp(wi, currentTimeStamp);
   let closestWeather = findClosestTimestamp(we, currentTimeStamp);
   let closestWave = findClosestTimestamp(wa, currentTimeStamp);
+
+  console.log({closestWave})
+  console.log({closestWeather})
 
   let htmlContent = `
         <h2>
@@ -766,7 +775,10 @@ function createCharts(
   let tide_timestamps = td.map((obj) =>
     parseFloat(new Date(obj.timestamp * 1000).getHours())
   );
-  console.log(timestamps[0]);
+  console.log(timestamps);
+  let date__ = new Date(wd[0].timestamp*1000);
+
+  console.log(date__.toString());
 
   console.log("timestamps chart", timestamps);
   let surf_min = wd.map((obj) => obj.surf.min);
@@ -1228,16 +1240,16 @@ function updateChart(forward) {
 
     //deep copy
     temp_wavejson = JSON.parse(JSON.stringify(wave_jsondata));
-wave_jsondata;
+// wave_jsondata;
     temp_tidesjson = JSON.parse(JSON.stringify( tides_jsondata));
     temp_windjson = JSON.parse(JSON.stringify( wind_jsondata));
     temp_weatherjson = JSON.parse(JSON.stringify( weather_jsondata));
     temp_ratingjson = JSON.parse(JSON.stringify( rating_jsondata));
     temp_conditionsjson = JSON.parse(JSON.stringify( conditions_jsondata));
 
-    console.log(wave_jsondata)
-    console.log(temp_wavejson)
-    console.log({currentIndex})
+    // console.log(wave_jsondata)
+    // console.log(temp_wavejson)
+    // console.log({currentIndex})
     // console.log(tides_jsondata.data.tides)
     // Get the new data window and update the chart's data
     temp_wavejson.data.wave = wave_jsondata.data.wave.slice(currentIndex*8, (currentIndex+1)*8 );
